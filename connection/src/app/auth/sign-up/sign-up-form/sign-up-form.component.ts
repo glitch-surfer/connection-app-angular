@@ -1,13 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { catchError, throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SignUpService } from '../../../api/sign-up.service';
+import { SignUp } from '../../../api/model/sign-up';
 import { passwordValidator } from './validators/password-validator';
 
 @Component({
   selector: 'app-sign-up-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './sign-up-form.component.html',
   styleUrl: './sign-up-form.component.scss',
 })
@@ -18,12 +22,44 @@ export class SignUpFormComponent {
     password: new FormControl('', { validators: [Validators.required, passwordValidator()] }),
   });
 
+  constructor(
+    private http: SignUpService,
+    private router: Router,
+    private snackBar: MatSnackBar,
+  ) {}
+
   onSubmit() {
-    if (this.form.valid) {
-      // this.authService.login('token');
-    } else {
+    if (!this.form.valid) {
       this.form.markAllAsTouched();
+      return;
     }
+
+    const formData = this.form.value;
+    const body = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+    } as SignUp;
+
+    this.http
+      .signUp(body)
+      .pipe(
+        catchError((err) => {
+          this.snackBar.open(err.error.message, 'Close', {
+            duration: 5000,
+            panelClass: ['error-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
+          return throwError(() => new Error(err.error.message));
+        }),
+      )
+      .subscribe(() => {
+        this.router.navigate(['/signin']);
+        this.snackBar.open('Account created successfully', 'Close', {
+          duration: 5000,
+        });
+      });
   }
 
   hasError(
