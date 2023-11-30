@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { catchError, throwError } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../api/auth.service';
 import { SignUp } from '../../../api/model/sign-up';
 import { passwordValidator } from './validators/password-validator';
+import { NotificationService } from '../../../core/services/notification.service';
+import { Notifications } from '../../../api/consts/notifications';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -25,7 +26,7 @@ export class SignUpFormComponent {
   constructor(
     private http: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar,
+    private notificationService: NotificationService,
   ) {}
 
   onSubmit() {
@@ -40,18 +41,13 @@ export class SignUpFormComponent {
       .signUp(formData)
       .pipe(
         catchError((err) => {
-          this.snackBar.open(err.error.message, 'Close', {
-            duration: 5000,
-            panelClass: ['error-snackbar'],
-          });
-          return throwError(() => new Error(err.error.message));
+          this.notificationService.error(err.error.message);
+          return throwError(() => new Error(err.error.message || Notifications.UNKNOWN_ERROR));
         }),
       )
       .subscribe(() => {
         this.router.navigate(['/signin']);
-        this.snackBar.open('Account created successfully', 'Close', {
-          duration: 5000,
-        });
+        this.notificationService.success(Notifications.SUCCESS_SIGNUP);
       });
   }
 
