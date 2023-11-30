@@ -7,10 +7,10 @@ import { SignUp } from './model/sign-up';
 @Injectable({
   providedIn: 'root',
 })
-export class SignUpService {
+export class AuthService {
   constructor(private http: HttpClient) {}
 
-  signUp(body: SignUp): Observable<SignUp> {
-    return this.http.post<SignUp>(`${ApiPaths.BASE_URL}${ApiPaths.SIGN_UP}`, body);
+  signUp(body: SignUp): Observable<null> {
+    return this.http.post<null>(`${ApiPaths.BASE_URL}${ApiPaths.SIGN_UP}`, body);
   }
 }

@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { catchError, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SignUpService } from '../../../api/sign-up.service';
+import { AuthService } from '../../../api/auth.service';
 import { SignUp } from '../../../api/model/sign-up';
 import { passwordValidator } from './validators/password-validator';
 
@@ -23,7 +23,7 @@ export class SignUpFormComponent {
   });
 
   constructor(
-    private http: SignUpService,
+    private http: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
   ) {}
@@ -34,22 +34,15 @@ export class SignUpFormComponent {
       return;
     }
 
-    const formData = this.form.value;
-    const body = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-    } as SignUp;
+    const formData = this.form.value as SignUp;
 
     this.http
-      .signUp(body)
+      .signUp(formData)
       .pipe(
         catchError((err) => {
           this.snackBar.open(err.error.message, 'Close', {
             duration: 5000,
             panelClass: ['error-snackbar'],
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
           });
           return throwError(() => new Error(err.error.message));
         }),
