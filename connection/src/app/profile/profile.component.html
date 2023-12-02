@@ -1,1 +1,11 @@
-<p>profile works!</p>
+<p>Profile</p>
+<div *ngIf="profile$ | async as profile">
+  <ng-container *ngIf="profile.uid.length">
+    <p>id: {{ profile.uid }}</p>
+    <p>email: {{ profile.email }}</p>
+    <p>name: {{ profile.name }}</p>
+    <p>created: {{ profile.createdAt | date }}</p>
+  </ng-container>
+</div>
+
+<p *ngIf="loading$ | async">Loading...</p>

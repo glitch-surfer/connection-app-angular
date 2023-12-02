@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiPaths } from './api-paths';
-import { Profile } from '../store/store.model';
+import { ProfileDTO } from './model/profile';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ import { Profile } from '../store/store.model';
 export class ProfileHttpService {
   constructor(private http: HttpClient) {}
 
-  getProfile(): Observable<Profile> {
-    return this.http.get<Profile>(`${ApiPaths.BASE_URL}${ApiPaths.PROFILE}`);
+  getProfile(): Observable<ProfileDTO> {
+    return this.http.get<ProfileDTO>(`${ApiPaths.BASE_URL}${ApiPaths.PROFILE}`);
   }
 }
