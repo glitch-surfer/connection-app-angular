@@ -23,7 +23,7 @@ export class SignInService {
     private notificationService: NotificationService,
   ) {}
 
-  onSubmit(form: FormGroup) {
+  onSubmit(form: FormGroup): void {
     if (!form.valid) {
       form.markAllAsTouched();
       return;
@@ -46,9 +46,27 @@ export class SignInService {
         }),
         finalize(() => this.loading$$.next(false)),
       )
-      .subscribe(() => {
-        this.router.navigate(['/main']);
+      .subscribe((credentials) => {
+        const { email } = form.value;
+        const { token, uid } = credentials;
+        SignInService.setCredentials(email, token, uid);
+
+        this.router.navigate(['/groups']);
         this.notificationService.success(Notifications.SUCCESS_SIGNIN);
       });
+  }
+
+  static setCredentials(email: string, token: string, uid: string): void {
+    localStorage.setItem('email', email);
+    localStorage.setItem('token', token);
+    localStorage.setItem('uid', uid);
+  }
+
+  static getCredentials(): { email: string; token: string; uid: string } {
+    return {
+      email: localStorage.getItem('email') || '',
+      token: localStorage.getItem('token') || '',
+      uid: localStorage.getItem('uid') || '',
+    };
   }
 }
