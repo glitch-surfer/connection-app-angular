@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiPaths } from './api-paths';
-import { SignInResponse, SignUp } from './model/sign-up';
-import { SignIn } from './model/sign-in';
+import { SignUp } from './model/sign-up';
+import { SignIn, SignInResponse } from './model/sign-in';
 
 @Injectable({
   providedIn: 'root',
