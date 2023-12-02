@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { catchError, throwError } from 'rxjs';
-import { AuthService } from '../../../api/auth.service';
-import { SignUp } from '../../../api/model/sign-up';
 import { passwordValidator } from './validators/password-validator';
-import { NotificationService } from '../../../core/services/notification.service';
-import { Notifications } from '../../../api/consts/notifications';
+import { SignUpService } from '../sign-up.service';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -23,37 +19,15 @@ export class SignUpFormComponent {
     password: new FormControl('', { validators: [Validators.required, passwordValidator()] }),
   });
 
-  constructor(
-    private http: AuthService,
-    private router: Router,
-    private notificationService: NotificationService,
-  ) {}
+  constructor(private signUpService: SignUpService) {}
 
   onSubmit() {
-    if (!this.form.valid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    const formData = this.form.value as SignUp;
-
-    this.http
-      .signUp(formData)
-      .pipe(
-        catchError((err) => {
-          this.notificationService.error(err.error.message);
-          return throwError(() => new Error(err.error.message || Notifications.UNKNOWN_ERROR));
-        }),
-      )
-      .subscribe(() => {
-        this.router.navigate(['/signin']);
-        this.notificationService.success(Notifications.SUCCESS_SIGNUP);
-      });
+    this.signUpService.onSubmit(this.form);
   }
 
   hasError(
     controlName: 'name' | 'email' | 'password',
-    error: 'required' | 'email' | 'weakPassword',
+    error: 'required' | 'email' | 'weakPassword' | 'duplicatedEmail',
   ): boolean {
     const login = this.form.get(controlName);
     return login?.touched && login?.errors?.[error];
