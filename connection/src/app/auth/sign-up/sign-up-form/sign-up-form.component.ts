@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { passwordValidator } from './validators/password-validator';
 import { SignUpService } from '../sign-up.service';
+import { duplicatedEmailValidator } from './validators/duplicated-email';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -17,7 +18,9 @@ export class SignUpFormComponent {
 
   public form = new FormGroup({
     name: new FormControl('', { validators: [Validators.required] }),
-    email: new FormControl('', { validators: [Validators.required, Validators.email] }),
+    email: new FormControl('', {
+      validators: [Validators.required, Validators.email, duplicatedEmailValidator()],
+    }),
     password: new FormControl('', { validators: [Validators.required, passwordValidator()] }),
   });
 
@@ -37,5 +40,9 @@ export class SignUpFormComponent {
 
   get password() {
     return this.form.get('password');
+  }
+
+  get email() {
+    return this.form.get('email');
   }
 }

@@ -20,7 +20,7 @@
     />
     <p class="error" *ngIf="hasError('email', 'required')">Please enter email</p>
     <p class="error" *ngIf="hasError('email', 'email')">The email is invalid</p>
-    <p class="error" *ngIf="hasError('email', 'duplicatedEmail')">The email is duplicated</p>
+    <p class="error" *ngIf="hasError('email', 'duplicatedEmail')">{{ email?.errors?.['duplicatedEmail'] }}</p>
     <label for="password" class="label"></label>
     <input
       type="password"

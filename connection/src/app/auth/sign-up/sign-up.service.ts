@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, catchError, finalize, throwError } from 'rxjs';
+import { EMPTY, Subject, catchError, finalize } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AuthService } from '../../api/auth.service';
 import { Notifications } from '../../api/consts/notifications';
@@ -11,9 +11,7 @@ import { NotificationService } from '../../core/services/notification.service';
   providedIn: 'root',
 })
 export class SignUpService {
-  private duplicatedEmail$$ = new Subject<string>();
-
-  duplicatedEmail$ = this.duplicatedEmail$$.asObservable();
+  static duplicatedEmail = '';
 
   private loading$$ = new Subject<boolean>();
 
@@ -41,10 +39,10 @@ export class SignUpService {
           this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
           if (err.error.type === 'PrimaryDuplicationException') {
             const email = form.get('email') as FormControl;
-            email.setErrors({ duplicatedEmail: true });
-            this.duplicatedEmail$$.next(email.value);
+            email.setErrors({ duplicatedEmail: err.error.message });
+            SignUpService.duplicatedEmail = email.value;
           }
-          return throwError(() => new Error(err.error.message || Notifications.UNKNOWN_ERROR));
+          return EMPTY;
         }),
         finalize(() => this.loading$$.next(false)),
       )
