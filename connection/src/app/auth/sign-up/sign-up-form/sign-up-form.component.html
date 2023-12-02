@@ -42,7 +42,7 @@
     <a [routerLink]="'/signin'">SignIn</a>
     <button
     type="submit"
-    [disabled]="!form.valid"
+    [disabled]="!form.valid || (loading$ | async)"
     >SignUp</button>
   </div>
 </form>

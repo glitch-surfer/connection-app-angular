@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, catchError, throwError } from 'rxjs';
+import { Subject, catchError, finalize, throwError } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AuthService } from '../../api/auth.service';
 import { Notifications } from '../../api/consts/notifications';
@@ -14,6 +14,10 @@ export class SignUpService {
   private duplicatedEmail$$ = new Subject<string>();
 
   duplicatedEmail$ = this.duplicatedEmail$$.asObservable();
+
+  private loading$$ = new Subject<boolean>();
+
+  loading$ = this.loading$$.asObservable();
 
   constructor(
     private http: AuthService,
@@ -29,6 +33,7 @@ export class SignUpService {
 
     const formData = form.value as SignUp;
 
+    this.loading$$.next(true);
     this.http
       .signUp(formData)
       .pipe(
@@ -41,6 +46,7 @@ export class SignUpService {
           }
           return throwError(() => new Error(err.error.message || Notifications.UNKNOWN_ERROR));
         }),
+        finalize(() => this.loading$$.next(false)),
       )
       .subscribe(() => {
         this.router.navigate(['/signin']);

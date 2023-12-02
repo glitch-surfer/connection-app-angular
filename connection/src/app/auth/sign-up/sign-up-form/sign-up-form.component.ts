@@ -13,6 +13,8 @@ import { SignUpService } from '../sign-up.service';
   styleUrl: './sign-up-form.component.scss',
 })
 export class SignUpFormComponent {
+  loading$ = this.signUpService.loading$;
+
   public form = new FormGroup({
     name: new FormControl('', { validators: [Validators.required] }),
     email: new FormControl('', { validators: [Validators.required, Validators.email] }),
