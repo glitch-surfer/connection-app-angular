@@ -2,9 +2,11 @@ import { ApplicationConfig, importProvidersFrom, Provider } from '@angular/core'
 import { provideRouter } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
 import { routes } from './app.routes';
 import { AuthService } from './api/auth.service';
 import { AuthInterceptor } from './api/interceptors/auth.interceptor';
+import { profileReducer } from './store/profile/profile.reducer';
 
 export const authInterceptorProvider: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -17,7 +19,12 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     AuthService,
     authInterceptorProvider,
-    importProvidersFrom([HttpClientModule]),
+    importProvidersFrom([
+      HttpClientModule,
+      StoreModule.forRoot({
+        profile: profileReducer,
+      }),
+    ]),
     provideAnimations(),
   ],
 };
