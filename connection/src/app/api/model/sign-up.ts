@@ -3,3 +3,8 @@ export interface SignUp {
   email: string;
   password: string;
 }
+
+export interface SignInResponse {
+  token: 'string';
+  uid: 'string';
+}
