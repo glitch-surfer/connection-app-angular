@@ -1,28 +1,30 @@
 import { Routes } from '@angular/router';
-// import { authGuard } from './core/guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
+import { anonymGuard } from './core/guards/anonym.guard';
 
 export const routes: Routes = [
   {
     path: 'signup',
     loadComponent: () => import('./auth/sign-up/sign-up.component').then((m) => m.SignUpComponent),
-    // canActivate: [authGuard],
+    canActivate: [anonymGuard],
   },
   {
     path: 'signin', // default for unauthenticated users
     loadComponent: () => import('./auth/sign-in/sign-in.component').then((m) => m.SignInComponent),
-    // canActivate: [authGuard],
+    canActivate: [anonymGuard],
   },
   {
     path: 'groups', // default for authenticated users
     loadComponent: () => import('./groups/groups.component').then((m) => m.GroupsComponent),
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'profile',
     loadComponent: () => import('./profile/profile.component').then((m) => m.ProfileComponent),
+    canActivate: [authGuard],
   },
-  {
-    path: '**',
-    redirectTo: 'signin',
-  },
+  // {
+  //   path: '**',
+  //   redirectTo: 'signin',
+  // },
 ];
