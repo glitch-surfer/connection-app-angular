@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SignInFormComponent } from './sign-in-form/sign-in-form.component';
 
 @Component({
-  selector: 'app-sign-up',
+  selector: 'app-sign-in',
   standalone: true,
   imports: [CommonModule, SignInFormComponent],
   templateUrl: './sign-in.component.html',
