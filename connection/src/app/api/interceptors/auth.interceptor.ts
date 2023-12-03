@@ -1,19 +1,17 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SignInService } from '../../auth/sign-in/sign-in.service';
-import { Credentials } from '../model/sign-in';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private credentials: Credentials | null = null;
-
+  // eslint-disable-next-line class-methods-use-this
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (!this.isAuth(this.credentials)) {
+    if (!AuthService.isAuth()) {
       return next.handle(request);
     }
 
-    const { email, token, uid } = this.credentials;
+    const { email, token, uid } = AuthService.getCredentials();
     const requestWithAuthHeaders = request.clone({
       headers: request.headers
         .set('rs-email', email)
@@ -22,17 +20,5 @@ export class AuthInterceptor implements HttpInterceptor {
     });
 
     return next.handle(requestWithAuthHeaders);
-  }
-
-  private isAuth(credentials: Credentials | null): credentials is Credentials {
-    if (credentials) return true;
-
-    const { email, token, uid } = SignInService.getCredentials();
-
-    if (!token) return false;
-
-    this.credentials = { email, token, uid };
-
-    return true;
   }
 }

@@ -49,24 +49,10 @@ export class SignInService {
       .subscribe((credentials) => {
         const { email } = form.value;
         const { token, uid } = credentials;
-        SignInService.setCredentials(email, token, uid);
+        AuthService.setCredentials({ email, token, uid });
 
         this.router.navigate(['/groups']);
         this.notificationService.success(Notifications.SUCCESS_SIGNIN);
       });
-  }
-
-  static setCredentials(email: string, token: string, uid: string): void {
-    localStorage.setItem('email', email);
-    localStorage.setItem('token', token);
-    localStorage.setItem('uid', uid);
-  }
-
-  static getCredentials(): { email: string; token: string; uid: string } {
-    return {
-      email: localStorage.getItem('email') || '',
-      token: localStorage.getItem('token') || '',
-      uid: localStorage.getItem('uid') || '',
-    };
   }
 }

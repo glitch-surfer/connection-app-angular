@@ -3,4 +3,5 @@ export const ApiPaths = {
   SIGN_UP: '/registration',
   SIGN_IN: '/login',
   PROFILE: '/profile',
+  LOGOUT: '/logout',
 };
