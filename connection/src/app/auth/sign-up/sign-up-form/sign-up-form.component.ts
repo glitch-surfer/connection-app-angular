@@ -6,6 +6,10 @@ import { passwordValidator } from './validators/password-validator';
 import { SignUpService } from '../sign-up.service';
 import { duplicatedEmailValidator } from './validators/duplicated-email';
 
+type Errors = 'required' | 'email' | 'weakPassword' | 'duplicatedEmail' | 'maxlength' | 'pattern';
+
+type ControlNames = 'name' | 'email' | 'password';
+
 @Component({
   selector: 'app-sign-up-form',
   standalone: true,
@@ -36,10 +40,7 @@ export class SignUpFormComponent {
     this.signUpService.onSubmit(this.form);
   }
 
-  hasError(
-    controlName: 'name' | 'email' | 'password',
-    error: 'required' | 'email' | 'weakPassword' | 'duplicatedEmail' | 'maxlength' | 'pattern',
-  ): boolean {
+  hasError(controlName: ControlNames, error: Errors): boolean {
     const login = this.form.get(controlName);
     return login?.touched && login?.errors?.[error];
   }

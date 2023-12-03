@@ -6,6 +6,10 @@ import { passwordValidator } from './validators/password-validator';
 import { SignInService } from '../sign-in.service';
 import { notFoundEmailValidator } from './validators/not-found-email';
 
+type ControlNames = 'email' | 'password';
+
+type Errors = 'required' | 'email' | 'weakPassword' | 'notFound';
+
 @Component({
   selector: 'app-sign-in-form',
   standalone: true,
@@ -29,10 +33,7 @@ export class SignInFormComponent {
     this.signInService.onSubmit(this.form);
   }
 
-  hasError(
-    controlName: 'email' | 'password',
-    error: 'required' | 'email' | 'weakPassword' | 'notFound',
-  ): boolean {
+  hasError(controlName: ControlNames, error: Errors): boolean {
     const login = this.form.get(controlName);
     return login?.touched && login?.errors?.[error];
   }
