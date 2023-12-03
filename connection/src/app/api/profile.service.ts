@@ -13,4 +13,8 @@ export class ProfileHttpService {
   getProfile(): Observable<ProfileDTO> {
     return this.http.get<ProfileDTO>(`${ApiPaths.BASE_URL}${ApiPaths.PROFILE}`);
   }
+
+  updateProfileName(name: string): Observable<null> {
+    return this.http.put<null>(`${ApiPaths.BASE_URL}${ApiPaths.PROFILE}`, { name });
+  }
 }

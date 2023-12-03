@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   BehaviorSubject,
+  EMPTY,
   Observable,
+  Subscription,
   catchError,
   filter,
   finalize,
@@ -22,7 +24,9 @@ import { Notifications } from '../../api/consts/notifications';
 @Injectable({
   providedIn: 'root',
 })
-export class ProfileControllerService {
+export class ProfileControllerService implements OnDestroy {
+  private subscription: Subscription | null = null;
+
   private loading$$ = new BehaviorSubject<boolean>(false);
 
   loading$ = this.loading$$.asObservable();
@@ -41,9 +45,7 @@ export class ProfileControllerService {
           this.loading$$.next(true);
           return this.http.getProfile().pipe(
             map(profileMapper),
-            tap((profileData) => {
-              this.store.dispatch(profileLoaded({ profile: profileData }));
-            }),
+            tap((profileData) => this.store.dispatch(profileLoaded({ profile: profileData }))),
             catchError((err) => {
               this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
               return of(profile);
@@ -55,5 +57,28 @@ export class ProfileControllerService {
         return of(profile);
       }),
     );
+  }
+
+  updateProfileName(name: string, profile: Profile): void {
+    this.loading$$.next(true);
+
+    this.subscription = this.http
+      .updateProfileName(name)
+      .pipe(
+        catchError((err) => {
+          this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
+          return EMPTY;
+        }),
+        tap(() => this.store.dispatch(profileLoaded({ profile: { ...profile, name } }))),
+        tap(() => this.notificationService.success(Notifications.SUCCESS_PROFILE_NAME)),
+        finalize(() => this.loading$$.next(false)),
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

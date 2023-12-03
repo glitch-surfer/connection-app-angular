@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProfileControllerService } from './services/profile-controller.service';
+import { Profile } from '../store/store.model';
 
 type Errors = 'required' | 'maxlength' | 'pattern';
 
@@ -38,12 +39,24 @@ export class ProfileComponent {
     this.name.setValue(name);
   }
 
-  onSave() {
-    if (!this.name) {
+  onSave(profileData: string | null) {
+    if (this.name.invalid || !this.name.value || !profileData) {
       return;
     }
 
     this.isEditable = false;
+
+    let profile: Profile;
+    try {
+      profile = JSON.parse(profileData);
+    } catch (error) {
+      return;
+    }
+    if (!profile) {
+      return;
+    }
+
+    this.profileService.updateProfileName(this.name.value, profile);
   }
 
   hasError(error: Errors): boolean {
