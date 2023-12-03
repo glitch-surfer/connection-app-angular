@@ -17,7 +17,13 @@ export class SignUpFormComponent {
   loading$ = this.signUpService.loading$;
 
   public form = new FormGroup({
-    name: new FormControl('', { validators: [Validators.required] }),
+    name: new FormControl('', {
+      validators: [
+        Validators.required,
+        Validators.maxLength(40),
+        Validators.pattern(/^[a-zA-Zа-яА-Я ]+$/),
+      ],
+    }),
     email: new FormControl('', {
       validators: [Validators.required, Validators.email, duplicatedEmailValidator()],
     }),
@@ -32,7 +38,7 @@ export class SignUpFormComponent {
 
   hasError(
     controlName: 'name' | 'email' | 'password',
-    error: 'required' | 'email' | 'weakPassword' | 'duplicatedEmail',
+    error: 'required' | 'email' | 'weakPassword' | 'duplicatedEmail' | 'maxlength' | 'pattern',
   ): boolean {
     const login = this.form.get(controlName);
     return login?.touched && login?.errors?.[error];
@@ -44,5 +50,9 @@ export class SignUpFormComponent {
 
   get email() {
     return this.form.get('email');
+  }
+
+  get name() {
+    return this.form.get('name');
   }
 }
