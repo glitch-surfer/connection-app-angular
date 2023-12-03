@@ -62,4 +62,8 @@ export class ProfileComponent {
   hasError(error: Errors): boolean {
     return this.name?.touched && this.name?.errors?.[error];
   }
+
+  onLogout() {
+    this.profileService.logout();
+  }
 }

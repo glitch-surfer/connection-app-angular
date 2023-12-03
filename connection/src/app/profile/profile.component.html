@@ -1,6 +1,10 @@
 <h2>Profile</h2>
-<div *ngIf="profile$ | async as profile">
-  <ng-container *ngIf="profile.uid.length">
+<button class="logout-btn" (click)="onLogout()" [disabled]="loading$ | async">Logout</button>
+
+<p *ngIf="loading$ | async; else content">Loading...</p>
+
+<ng-template #content>
+  <div *ngIf="profile$ | async as profile">
     <p>id: {{ profile.uid }}</p>
     <p>email: {{ profile.email }}</p>
     <p *ngIf="!isEditable">
@@ -20,18 +24,12 @@
       <p class="error" *ngIf="hasError('pattern')">Only letters are allowed</p>
     </ng-container>
     <p>created: {{ profile.createdAt | date }}</p>
-  </ng-container>
-</div>
-<div class="btn-container">
-  <button *ngIf="isEditable" (click)="isEditable = false">Cancel</button>
-  <button
-    *ngIf="isEditable"
-    (click)="onSave(profile.textContent)"
-  >
-    Save
-  </button>
-</div>
+  </div>
 
-<p *ngIf="loading$ | async">Loading...</p>
+  <div class="btn-container">
+    <button *ngIf="isEditable" (click)="isEditable = false">Cancel</button>
+    <button *ngIf="isEditable" (click)="onSave(profile.textContent)">Save</button>
+  </div>
+</ng-template>
 
 <div [ngStyle]="{ display: 'none' }" #profile>{{ profile$ | async | json }}</div>

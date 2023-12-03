@@ -19,10 +19,16 @@
 .edit-btn {
   position: absolute;
   top: 2rem;
-  right: 30%;
+  left: 15%;
 }
 
 .btn-container {
   display: flex;
   gap: 2rem;
+}
+
+.logout-btn {
+  position: absolute;
+  top: 2rem;
+  right: 15%;
 }
