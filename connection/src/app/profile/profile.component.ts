@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProfileControllerService } from './services/profile-controller.service';
 
@@ -8,7 +8,7 @@ type Errors = 'required' | 'maxlength' | 'pattern';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
