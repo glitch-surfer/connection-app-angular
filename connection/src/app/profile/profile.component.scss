@@ -1,0 +1,28 @@
+@import 'styles.scss';
+
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.error {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 12px;
+  text-align: left;
+  color: $error-color;
+}
+
+.edit-btn {
+  position: absolute;
+  top: 2rem;
+  right: 30%;
+}
+
+.btn-container {
+  display: flex;
+  gap: 2rem;
+}

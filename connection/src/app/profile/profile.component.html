@@ -1,11 +1,29 @@
-<p>Profile</p>
+<h2>Profile</h2>
 <div *ngIf="profile$ | async as profile">
   <ng-container *ngIf="profile.uid.length">
     <p>id: {{ profile.uid }}</p>
     <p>email: {{ profile.email }}</p>
-    <p>name: {{ profile.name }}</p>
+    <p *ngIf="!isEditable">
+      <button class="edit-btn" *ngIf="!isEditable" (click)="onEdit(profileName.textContent)">
+        Edit
+      </button>
+      name: <span #profileName>{{ profile.name }}</span>
+    </p>
+    <ng-container *ngIf="isEditable">
+      <label for="name">name: </label>
+      <input type="text" class="input" id="name" [formControl]="name" placeholder="name" />
+      <p class="error" *ngIf="hasError('required')">Please enter name</p>
+    <p class="error" *ngIf="hasError('maxlength')">
+      Maximum length is {{ name.errors?.['maxlength']?.requiredLength }}, you entered
+      {{ name.errors?.['maxlength']?.actualLength }}
+    </p>
+    <p class="error" *ngIf="hasError('pattern')">Only letters are allowed</p>
+    </ng-container>
     <p>created: {{ profile.createdAt | date }}</p>
   </ng-container>
 </div>
-
+<div class="btn-container">
+  <button *ngIf="isEditable" (click)="isEditable = false">Cancel</button>
+  <button *ngIf="isEditable" (click)="onSave()">Save</button>
+</div>
 <p *ngIf="loading$ | async">Loading...</p>
