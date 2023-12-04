@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { EMPTY, Subject, catchError, finalize } from 'rxjs';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { AuthService } from '../../api/auth.service';
 import { Notifications } from '../../api/consts/notifications';
 import { NotificationService } from '../../core/services/notification.service';
@@ -11,7 +11,7 @@ import { SignIn } from '../../api/model/sign-in';
   providedIn: 'root',
 })
 export class SignInService {
-  static notFoundEmail = '';
+  static incorrectCredentials: SignIn[] = [];
 
   private loading$$ = new Subject<boolean>();
 
@@ -24,11 +24,6 @@ export class SignInService {
   ) {}
 
   onSubmit(form: FormGroup): void {
-    if (!form.valid) {
-      form.markAllAsTouched();
-      return;
-    }
-
     const formData = form.value as SignIn;
 
     this.loading$$.next(true);
@@ -38,9 +33,8 @@ export class SignInService {
         catchError((err) => {
           this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
           if (err.error.type === 'NotFoundException') {
-            const email = form.get('email') as FormControl;
-            email.setErrors({ notFound: err.error.message });
-            SignInService.notFoundEmail = email.value;
+            form.setErrors({ incorrectCreds: err.error.message });
+            SignInService.incorrectCredentials.push(formData);
           }
           return EMPTY;
         }),

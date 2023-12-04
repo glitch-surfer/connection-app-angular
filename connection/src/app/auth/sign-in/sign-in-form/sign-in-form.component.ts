@@ -4,11 +4,11 @@ import { RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { passwordValidator } from './validators/password-validator';
 import { SignInService } from '../sign-in.service';
-import { notFoundEmailValidator } from './validators/not-found-email';
+import { incorrectCredentialsValidator } from './validators/incorrect-credentials';
 
 type ControlNames = 'email' | 'password';
 
-type Errors = 'required' | 'email' | 'weakPassword' | 'notFound';
+type Errors = 'required' | 'email' | 'weakPassword' | 'incorrectCreds';
 
 @Component({
   selector: 'app-sign-in-form',
@@ -20,12 +20,15 @@ type Errors = 'required' | 'email' | 'weakPassword' | 'notFound';
 export class SignInFormComponent {
   loading$ = this.signInService.loading$;
 
-  public form = new FormGroup({
-    email: new FormControl('', {
-      validators: [Validators.required, Validators.email, notFoundEmailValidator()],
-    }),
-    password: new FormControl('', { validators: [Validators.required, passwordValidator()] }),
-  });
+  public form = new FormGroup(
+    {
+      email: new FormControl('', {
+        validators: [Validators.required, Validators.email],
+      }),
+      password: new FormControl('', { validators: [Validators.required, passwordValidator()] }),
+    },
+    { validators: [incorrectCredentialsValidator()] },
+  );
 
   constructor(private signInService: SignInService) {}
 
