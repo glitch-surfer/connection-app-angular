@@ -11,7 +11,7 @@ import { NotificationService } from '../../core/services/notification.service';
   providedIn: 'root',
 })
 export class SignUpService {
-  static duplicatedEmail = '';
+  static duplicatedEmail: string[] = [];
 
   private loading$$ = new Subject<boolean>();
 
@@ -40,7 +40,7 @@ export class SignUpService {
           if (err.error.type === 'PrimaryDuplicationException') {
             const email = form.get('email') as FormControl;
             email.setErrors({ duplicatedEmail: err.error.message });
-            SignUpService.duplicatedEmail = email.value;
+            SignUpService.duplicatedEmail.push(email.value);
           }
           return EMPTY;
         }),
