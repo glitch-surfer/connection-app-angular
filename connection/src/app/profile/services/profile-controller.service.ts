@@ -29,7 +29,7 @@ import { AuthService } from '../../api/auth.service';
 export class ProfileControllerService implements OnDestroy {
   private subscription: Subscription[] = [];
 
-  private loading$$ = new BehaviorSubject<boolean>(false);
+  private loading$$ = new BehaviorSubject<boolean>(true);
 
   loading$ = this.loading$$.asObservable();
 
@@ -42,8 +42,6 @@ export class ProfileControllerService implements OnDestroy {
   ) {}
 
   getProfile(): Observable<Profile> {
-    this.loading$$.next(true);
-
     return (this.store as Store<AppState>).select(selectProfile).pipe(
       filter(Boolean),
       switchMap((profile) => {
@@ -61,6 +59,7 @@ export class ProfileControllerService implements OnDestroy {
 
         return of(profile);
       }),
+      finalize(() => this.loading$$.next(false)),
     );
   }
 
