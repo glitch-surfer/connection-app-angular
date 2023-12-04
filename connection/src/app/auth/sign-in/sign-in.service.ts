@@ -51,7 +51,7 @@ export class SignInService {
         const { token, uid } = credentials;
         AuthService.setCredentials({ email, token, uid });
 
-        this.router.navigate(['/groups']);
+        this.router.navigate(['/']);
         this.notificationService.success(Notifications.SUCCESS_SIGNIN);
       });
   }

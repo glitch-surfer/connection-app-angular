@@ -4,9 +4,9 @@ import { anonymGuard } from './core/guards/anonym.guard';
 
 export const routes: Routes = [
   {
-    path: 'signup',
-    loadComponent: () => import('./auth/sign-up/sign-up.component').then((m) => m.SignUpComponent),
-    canActivate: [anonymGuard],
+    path: '', // default for authenticated users
+    loadComponent: () => import('./groups/groups.component').then((m) => m.GroupsComponent),
+    canActivate: [authGuard],
   },
   {
     path: 'signin', // default for unauthenticated users
@@ -14,17 +14,13 @@ export const routes: Routes = [
     canActivate: [anonymGuard],
   },
   {
-    path: 'groups', // default for authenticated users
-    loadComponent: () => import('./groups/groups.component').then((m) => m.GroupsComponent),
-    canActivate: [authGuard],
+    path: 'signup',
+    loadComponent: () => import('./auth/sign-up/sign-up.component').then((m) => m.SignUpComponent),
+    canActivate: [anonymGuard],
   },
   {
     path: 'profile',
     loadComponent: () => import('./profile/profile.component').then((m) => m.ProfileComponent),
     canActivate: [authGuard],
   },
-  // {
-  //   path: '**',
-  //   redirectTo: 'signin',
-  // },
 ];

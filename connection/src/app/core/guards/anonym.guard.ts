@@ -5,5 +5,5 @@ import { AuthService } from '../../api/auth.service';
 export const anonymGuard: CanActivateFn = () => {
   const router = inject(Router);
 
-  return !AuthService.isAuth() || router.createUrlTree(['/groups']);
+  return !AuthService.isAuth() || router.createUrlTree(['/']);
 };
