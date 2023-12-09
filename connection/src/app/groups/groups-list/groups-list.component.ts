@@ -26,8 +26,8 @@ export class GroupsListComponent implements OnInit {
   }
 
   updateGroups() {
+    this.groupsListService.getGroupsList();
     this.groupsListService.setTimer();
-    // todo add http refrech req
   }
 
   openNewGroupDialog() {
