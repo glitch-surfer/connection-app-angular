@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { AuthService } from './api/auth.service';
 import { AuthInterceptor } from './api/interceptors/auth.interceptor';
 import { profileReducer } from './store/profile/profile.reducer';
+import { groupsReducer } from './store/groups/groups.reducer';
 
 export const authInterceptorProvider: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -23,6 +24,7 @@ export const appConfig: ApplicationConfig = {
       HttpClientModule,
       StoreModule.forRoot({
         profile: profileReducer,
+        groups: groupsReducer,
       }),
     ]),
     provideAnimations(),

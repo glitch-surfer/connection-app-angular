@@ -6,5 +6,10 @@ export const initialState: IGroupViewModel[] = [];
 
 export const groupsReducer = createReducer(
   initialState,
-  on(groupsLoaded, (_, { groups }): IGroupViewModel[] => [...groups]),
+  on(
+    groupsLoaded,
+    (_: IGroupViewModel[], { groups }: { groups: IGroupViewModel[] }): IGroupViewModel[] => [
+      ...groups,
+    ],
+  ),
 );

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { GroupsListService } from './services/groups-list.service';
@@ -11,7 +11,7 @@ import { NewGroupDialogComponent } from './new-group-dialog/new-group-dialog.com
   templateUrl: './groups-list.component.html',
   styleUrl: './groups-list.component.scss',
 })
-export class GroupsListComponent {
+export class GroupsListComponent implements OnInit {
   groups$ = this.groupsListService.groups$;
 
   timer$ = this.groupsListService.timer$;
@@ -20,6 +20,10 @@ export class GroupsListComponent {
     private groupsListService: GroupsListService,
     private dialog: MatDialog,
   ) {}
+
+  ngOnInit(): void {
+    this.groupsListService.getGroupsList('initial');
+  }
 
   updateGroups() {
     this.groupsListService.setTimer();

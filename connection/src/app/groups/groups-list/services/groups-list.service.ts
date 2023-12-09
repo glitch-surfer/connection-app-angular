@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, interval, map } from 'rxjs';
+import { BehaviorSubject, finalize, interval, map, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { GroupHttpService } from '../../../api/group.service';
-import { IGroupViewModel } from '../../../api/model/groups';
 import { groupsMapper } from '../helpers/group-mapper';
+import { groupsLoaded } from '../../../store/groups/groups.actions';
+import { selectGroups } from '../../../store/groups/groups.selectors';
+import { AppState } from '../../../store/store.model';
 
 const ONE_SECOND = 1000;
 const DEFAULT_TIMER = 6;
@@ -11,24 +14,13 @@ const DEFAULT_TIMER = 6;
   providedIn: 'root',
 })
 export class GroupsListService {
-  private groupsReq$ = this.groupHttpService
-    .getGroupsList()
-    .pipe(map((groups) => groupsMapper(groups)));
-
-  private newGroup$ = new BehaviorSubject<IGroupViewModel | null>(null);
-
-  groups$ = combineLatest([this.groupsReq$, this.newGroup$]).pipe(
-    map(([groups, newGroup]) => {
-      if (newGroup) {
-        return [...groups, newGroup];
-      }
-      return groups;
-    }),
-  );
+  groups$ = (this.store as Store<AppState>).select(selectGroups);
 
   private timer$$ = new BehaviorSubject<number>(0);
 
   timer$ = this.timer$$.asObservable();
+
+  private isInitialLoading = true;
 
   // todo add loading
   private loading$$ = new BehaviorSubject<boolean>(false);
@@ -39,7 +31,10 @@ export class GroupsListService {
     return this.timer$$.getValue();
   }
 
-  constructor(private groupHttpService: GroupHttpService) {}
+  constructor(
+    private groupHttpService: GroupHttpService,
+    private store: Store,
+  ) {}
 
   setTimer(): void {
     if (this.timer !== 0) {
@@ -56,5 +51,24 @@ export class GroupsListService {
 
       this.timer$$.next(this.timer - 1);
     });
+  }
+
+  getGroupsList(loadingState?: 'initial'): void {
+    if (loadingState === 'initial' && !this.isInitialLoading) {
+      return;
+    }
+
+    this.loading$$.next(true);
+
+    this.groupHttpService
+      .getGroupsList()
+      .pipe(
+        map((groups) => groupsMapper(groups)),
+        tap((groups) => this.store.dispatch(groupsLoaded({ groups }))),
+        finalize(() => this.loading$$.next(false)),
+      )
+      .subscribe();
+
+    this.isInitialLoading = false;
   }
 }
