@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { GroupsListService } from './services/groups-list.service';
+import { NewGroupDialogComponent } from './new-group-dialog/new-group-dialog.component';
 
 @Component({
   selector: 'app-groups-list',
@@ -12,9 +14,23 @@ import { GroupsListService } from './services/groups-list.service';
 export class GroupsListComponent {
   timer$ = this.groupsListService.timer$;
 
-  constructor(public groupsListService: GroupsListService) {}
+  constructor(
+    private groupsListService: GroupsListService,
+    private dialog: MatDialog,
+  ) {}
 
   updateGroups() {
     this.groupsListService.setTimer();
+    // todo add http refrech req
+  }
+
+  openNewGroupDialog() {
+    const dialogRef = this.dialog.open(NewGroupDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log(`Dialog result: ${result}`);
+      }
+    });
   }
 }
