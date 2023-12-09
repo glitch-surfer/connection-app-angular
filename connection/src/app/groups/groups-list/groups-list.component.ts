@@ -12,6 +12,8 @@ import { NewGroupDialogComponent } from './new-group-dialog/new-group-dialog.com
   styleUrl: './groups-list.component.scss',
 })
 export class GroupsListComponent {
+  groups$ = this.groupsListService.groups$;
+
   timer$ = this.groupsListService.timer$;
 
   constructor(

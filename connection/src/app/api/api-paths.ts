@@ -4,4 +4,5 @@ export const ApiPaths = {
   SIGN_IN: '/login',
   PROFILE: '/profile',
   LOGOUT: '/logout',
+  GROUPS_LIST: '/groups/list',
 };
