@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,7 +11,7 @@ import { MatDialogClose, MatDialogRef } from '@angular/material/dialog';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
@@ -21,7 +21,9 @@ import { MatDialogClose, MatDialogRef } from '@angular/material/dialog';
   styleUrl: './new-group-dialog.component.scss',
 })
 export class NewGroupDialogComponent {
-  name = '';
+  name = new FormControl('', {
+    validators: [Validators.maxLength(30), Validators.pattern('^[a-zA-Zа-яА-Я0-9 ]*$')],
+  });
 
   constructor(public dialogRef: MatDialogRef<NewGroupDialogComponent>) {}
 

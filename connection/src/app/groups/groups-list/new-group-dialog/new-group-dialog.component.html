@@ -3,10 +3,12 @@
   <p>Enter a name for your new group:</p>
   <mat-form-field>
     <mat-label>Group Name</mat-label>
-    <input matInput [(ngModel)]="name">
+    <input matInput [formControl]="name" />
+    <mat-error *ngIf="name.hasError('maxlength')">Group name must be less than 30 characters</mat-error>
+    <mat-error *ngIf="name.hasError('pattern')">Group name can only contain letters, numbers and space</mat-error>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button [mat-dialog-close]="name" cdkFocusInitial>Create</button>
+  <button mat-button [mat-dialog-close]="name" cdkFocusInitial [disabled]="!name.valid">Create</button>
 </div>
