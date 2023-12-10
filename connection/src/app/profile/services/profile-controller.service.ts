@@ -1,16 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-  BehaviorSubject,
-  EMPTY,
-  Observable,
-  Subscription,
-  catchError,
-  finalize,
-  map,
-  of,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, EMPTY, Subscription, catchError, finalize, map, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProfileHttpService } from '../../api/profile.service';
 import { selectProfile } from '../../store/profile/profile.selectors';
@@ -43,16 +33,30 @@ export class ProfileControllerService implements OnDestroy {
     private router: Router,
   ) {}
 
-  getProfile(): void {
+  getProfile(): Profile | null {
     if (this.profile) {
-      return;
+      return this.profile;
     }
 
     this.loading$$.next(true);
 
-    this.profileRequest()
-      .pipe(finalize(() => this.loading$$.next(false)))
+    this.http
+      .getProfile()
+      .pipe(
+        map(profileMapper),
+        tap((profileData) => this.store.dispatch(profileLoaded({ profile: profileData }))),
+        tap((profileData) => {
+          this.profile = profileData;
+        }),
+        finalize(() => this.loading$$.next(false)),
+        catchError((err) => {
+          this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
+          return EMPTY;
+        }),
+      )
       .subscribe();
+
+    return null;
   }
 
   updateProfileName(name: string, profile: Profile): void {
@@ -101,24 +105,6 @@ export class ProfileControllerService implements OnDestroy {
       .subscribe();
 
     this.subscription.push(subscription);
-  }
-
-  profileRequest(): Observable<Profile> {
-    if (this.profile) {
-      return of(this.profile);
-    }
-
-    return this.http.getProfile().pipe(
-      map(profileMapper),
-      tap((profileData) => this.store.dispatch(profileLoaded({ profile: profileData }))),
-      tap((profileData) => {
-        this.profile = profileData;
-      }),
-      catchError((err) => {
-        this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
-        return EMPTY;
-      }),
-    );
   }
 
   ngOnDestroy(): void {

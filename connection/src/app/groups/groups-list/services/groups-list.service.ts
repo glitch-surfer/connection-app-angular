@@ -2,14 +2,11 @@ import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   EMPTY,
-  Observable,
   catchError,
   filter,
   finalize,
-  forkJoin,
   interval,
   map,
-  of,
   switchMap,
   tap,
 } from 'rxjs';
@@ -23,7 +20,7 @@ import { AppState, Profile } from '../../../store/store.model';
 import { NewGroupDialogComponent } from '../new-group-dialog/new-group-dialog.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Notifications } from '../../../api/consts/notifications';
-import { IGroupViewModel } from '../../../api/model/groups';
+import { CreateGroupResponse, IGroupViewModel } from '../../../api/model/groups';
 import { ProfileControllerService } from '../../../profile/services/profile-controller.service';
 
 const ONE_SECOND = 1000;
@@ -110,17 +107,16 @@ export class GroupsListService {
         tap(() => this.loading$$.next(true)),
         switchMap((name: string) =>
           this.groupHttpService.createGroup(name).pipe(
-            map((res) => res.groupID),
-            switchMap(
-              (groupId: string): Observable<[string, Profile]> =>
-                forkJoin([of(groupId), this.profileService.profileRequest()]),
-            ),
+            map((res: CreateGroupResponse) => ({
+              id: res.groupID,
+              profile: this.profileService.getProfile() ?? ({} as Profile),
+            })),
             map(
-              ([id, profile]: [string, Profile]): IGroupViewModel => ({
+              ({ id, profile }): IGroupViewModel => ({
                 id,
                 name,
                 createdAt: Date.now().toString(),
-                createdBy: profile.uid,
+                createdBy: profile?.uid ?? '',
               }),
             ),
             tap((group) => this.store.dispatch(groupCreated({ group }))),

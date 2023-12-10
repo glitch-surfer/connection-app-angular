@@ -1,5 +1,6 @@
-<button (click)="updateGroups()" [disabled]="timer$ | async">Update</button>
-<span *ngIf="timer$ | async">timeout: {{ timer$ | async }}</span>
+<button (click)="updateGroups()" [disabled]="timer$ | async">
+  Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
+</button>
 <button (click)="openDialog()">New Group</button>
 
 <p *ngIf="loading$ | async; else content">Loading...</p>
