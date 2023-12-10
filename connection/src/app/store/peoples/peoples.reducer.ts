@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { IPeopleViewModel } from '../../api/model/peoples';
-import { peoplesLoaded } from './peoples.actions';
+import { peoplesConversationCreated, peoplesLoaded } from './peoples.actions';
 
 export const initialState: IPeopleViewModel[] = [];
 
@@ -12,14 +12,21 @@ export const peoplesReducer = createReducer(
       ...peoples,
     ],
   ),
-  // on(
-  //   peopleCreated,
-  //   (state: IPeopleViewModel[], { people }: { people: IPeopleViewModel }): IPeopleViewModel[] => [
-  //     people,
-  //     ...state,
-  //   ],
-  // ),
-  // on(peopleDeleted, (state: IPeopleViewModel[], { uid }: { uid: string }): IPeopleViewModel[] => {
-  //   return state.filter((people) => people.uid !== uid);
-  // }),
+  on(
+    peoplesConversationCreated,
+    (
+      state: IPeopleViewModel[],
+      { conversationID, uid }: { conversationID: string; uid: string },
+    ): IPeopleViewModel[] => {
+      return state.map((people) => {
+        if (people.uid === uid) {
+          return {
+            ...people,
+            conversationId: conversationID,
+          };
+        }
+        return people;
+      });
+    },
+  ),
 );

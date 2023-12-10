@@ -3,11 +3,10 @@ import { BehaviorSubject, EMPTY, catchError, finalize, forkJoin, interval, map, 
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { AppState } from '../../../store/store.model';
-// import { MatDialog } from '@angular/material/dialog';
 import { NotificationService } from '../../../core/services/notification.service';
 import { DEFAULT_TIMER, ONE_SECOND } from '../../consts/timer';
 import { selectPeoples } from '../../../store/peoples/peoples.selectors';
-import { peoplesLoaded } from '../../../store/peoples/peoples.actions';
+import { peoplesConversationCreated, peoplesLoaded } from '../../../store/peoples/peoples.actions';
 import { peoplesMapper } from '../helpers/peoples-mapper';
 import { PeopleHttpService } from '../../../api/people.service';
 import { AuthService } from '../../../api/auth.service';
@@ -19,8 +18,6 @@ import { Notifications } from '../../../api/consts/notifications';
 })
 export class PeopleListService {
   peoples$ = (this.store as Store<AppState>).select(selectPeoples);
-
-  // userId$ = this.profileService.profile$.pipe(map((profile) => profile?.uid));
 
   private timer$$ = new BehaviorSubject<number>(0);
 
@@ -40,9 +37,7 @@ export class PeopleListService {
     private peoplesHttpService: PeopleHttpService,
     private store: Store,
     private router: Router,
-    // private dialog: MatDialog,
     private notificationService: NotificationService,
-    // private profileService: ProfileControllerService,
   ) {}
 
   setTimer(): void {
@@ -64,7 +59,6 @@ export class PeopleListService {
 
   initPeoplesList(): void {
     this.getPeoplesList('initial');
-    // this.profileService.getProfile();
   }
 
   getPeoplesList(loadingState?: 'initial'): void {
@@ -104,6 +98,11 @@ export class PeopleListService {
       .createConversation(uid)
       .pipe(
         tap((newConversationId) =>
+          this.store.dispatch(
+            peoplesConversationCreated({ uid, conversationID: newConversationId.conversationID }),
+          ),
+        ),
+        tap((newConversationId) =>
           this.router.navigate(['/conversation', newConversationId.conversationID]),
         ),
         tap(() => this.notificationService.success(Notifications.SUCCESS_CREATE_CONVERSATION)),
@@ -115,33 +114,4 @@ export class PeopleListService {
       )
       .subscribe();
   }
-
-  // openCreateGroupDialog(): void {
-  //   this.dialog.open(NewGroupDialogComponent);
-  // }
-
-  // deleteGroup(id: string): void {
-  //   this.dialog
-  //     .open(ConfirmationComponent, {
-  //       data: {
-  //         title: 'Delete group',
-  //         content: 'Are you sure you want to delete this group?',
-  //         confirmButtonText: 'Delete',
-  //       },
-  //     })
-  //     .afterClosed()
-  //     .pipe(
-  //       filter(Boolean),
-  //       tap(() => this.loading$$.next(true)),
-  //       switchMap(() => this.groupHttpService.deleteGroup(id)),
-  //       tap(() => this.store.dispatch(groupDeleted({ id }))),
-  //       tap(() => this.notificationService.success(Notifications.SUCCESS_DELETED_GROUP)),
-  //       catchError(() => {
-  //         this.notificationService.error(Notifications.ERROR_DELETED_GROUP);
-  //         return EMPTY;
-  //       }),
-  //       finalize(() => this.loading$$.next(false)),
-  //     )
-  //     .subscribe();
-  // }
 }

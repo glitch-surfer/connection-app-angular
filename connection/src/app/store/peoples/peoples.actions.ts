@@ -8,16 +8,16 @@ export const peoplesLoaded = createAction(
   }),
 );
 
-// export const peoplesCreated = createAction(
-//   '[Peoples] People Created',
-//   ({ peoples }: { peoples: IPeopleViewModel }): { peoples: IPeopleViewModel } => ({
-//     peoples,
-//   }),
-// );
-
-// export const peoplesDeleted = createAction(
-//   '[Peoples] People Deleted',
-//   ({ id }: { id: string }): { id: string } => ({
-//     id,
-//   }),
-// );
+export const peoplesConversationCreated = createAction(
+  '[Peoples] People Conversation Created',
+  ({
+    conversationID,
+    uid,
+  }: {
+    conversationID: string;
+    uid: string;
+  }): { conversationID: string; uid: string } => ({
+    conversationID,
+    uid,
+  }),
+);
