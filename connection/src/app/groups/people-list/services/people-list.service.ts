@@ -9,6 +9,7 @@ import { selectPeoples } from '../../../store/peoples/peoples.selectors';
 import { peoplesLoaded } from '../../../store/peoples/peoples.actions';
 import { peoplesMapper } from '../helpers/peoples-mapper';
 import { PeopleHttpService } from '../../../api/people.service';
+import { AuthService } from '../../../api/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -73,6 +74,10 @@ export class PeopleListService {
       .getPeoplesList()
       .pipe(
         map((peoples) => peoplesMapper(peoples)),
+        map((peoples) => {
+          const currentUserUid = AuthService.getCredentials().uid;
+          return peoples.filter((people) => people.uid !== currentUserUid);
+        }),
         tap((peoples) => this.store.dispatch(peoplesLoaded({ peoples }))),
         finalize(() => this.loading$$.next(false)),
       )
