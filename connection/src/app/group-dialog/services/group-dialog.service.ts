@@ -18,6 +18,8 @@ import { groupDeleted } from '../../store/groups/groups.actions';
   providedIn: 'root',
 })
 export class GroupDialogService {
+  private readonly since: { [key: string]: string } = {};
+
   groupId: string = '';
 
   groupAuthorId$ = (this.store as Store<AppState>)
@@ -27,8 +29,6 @@ export class GroupDialogService {
   userId$ = (this.store as Store<AppState>)
     .select(selectProfile)
     .pipe(map((profile) => profile.uid));
-
-  private since = '';
 
   messages$ = (this.store as Store<AppState>).select(selectDialogs).pipe(
     map((dialogs) => {
@@ -79,22 +79,29 @@ export class GroupDialogService {
     this.loading$$.next(true);
 
     this.groupsHttpService
-      .getMessages(this.groupId, this.since)
+      .getMessages(this.groupId, this.since[this.groupId] ?? '')
       .pipe(
         map((messages) => MessagesMapper(messages)),
         tap((messages) => {
-          const isInitialLoading = this.since === '';
+          const isInitialLoading = Boolean(!this.since[this.groupId]);
+
+          if (messages.length > 0) {
+            this.since[this.groupId] = messages[messages.length - 1].createdAt;
+          }
 
           (this.store as Store<AppState>).dispatch(
             isInitialLoading
-              ? messagesLoaded({ groupId: this.groupId, messages })
-              : messagesAdded({ groupId: this.groupId, messages }),
+              ? messagesLoaded({
+                  groupId: this.groupId,
+                  messages,
+                  since: this.since[this.groupId] ?? '',
+                })
+              : messagesAdded({
+                  groupId: this.groupId,
+                  messages,
+                  since: this.since[this.groupId] ?? '',
+                }),
           );
-        }),
-        tap((messages) => {
-          if (messages.length > 0) {
-            this.since = messages[messages.length - 1].createdAt;
-          }
         }),
         finalize(() => this.loading$$.next(false)),
       )
