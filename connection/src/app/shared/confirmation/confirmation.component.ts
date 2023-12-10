@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef } from '@angular/material
 interface DialogData {
   title: string;
   content: string;
+  confirmButtonText: string;
 }
 
 @Component({

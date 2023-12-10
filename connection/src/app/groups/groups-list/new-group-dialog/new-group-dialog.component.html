@@ -4,11 +4,22 @@
   <mat-form-field>
     <mat-label>Group Name</mat-label>
     <input matInput [formControl]="name" />
-    <mat-error *ngIf="name.hasError('maxlength')">Group name must be less than 30 characters</mat-error>
-    <mat-error *ngIf="name.hasError('pattern')">Group name can only contain letters, numbers and space</mat-error>
+    <mat-error *ngIf="name.hasError('maxlength')"
+      >Group name must be less than 30 characters</mat-error
+    >
+    <mat-error *ngIf="name.hasError('pattern')"
+      >Group name can only contain letters, numbers and space</mat-error
+    >
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button [mat-dialog-close]="name.value" cdkFocusInitial [disabled]="!name.valid">Create</button>
+  <button mat-button (click)="onCancel()" [disabled]="loading$ | async">Cancel</button>
+  <button
+    mat-button
+    (click)="onCreateGroup()"
+    cdkFocusInitial
+    [disabled]="name.invalid || (loading$ | async)"
+  >
+    {{ (loading$ | async) ? 'Creating...' : 'Create' }}
+  </button>
 </div>

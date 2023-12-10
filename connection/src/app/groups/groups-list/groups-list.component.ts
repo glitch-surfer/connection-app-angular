@@ -31,7 +31,7 @@ export class GroupsListComponent implements OnInit {
   }
 
   openDialog() {
-    this.groupsListService.createNewGroup();
+    this.groupsListService.openCreateGroupDialog();
   }
 
   deleteGroup(groupId: string) {

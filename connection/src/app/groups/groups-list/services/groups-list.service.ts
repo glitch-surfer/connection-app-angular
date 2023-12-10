@@ -13,14 +13,13 @@ import {
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
 import { GroupHttpService } from '../../../api/group.service';
-import { groupsMapper } from '../helpers/group-mapper';
-import { groupCreated, groupDeleted, groupsLoaded } from '../../../store/groups/groups.actions';
-import { selectGroups } from '../../../store/groups/groups.selectors';
-import { AppState, Profile } from '../../../store/store.model';
 import { NewGroupDialogComponent } from '../new-group-dialog/new-group-dialog.component';
+import { groupsMapper } from '../helpers/group-mapper';
+import { groupDeleted, groupsLoaded } from '../../../store/groups/groups.actions';
+import { selectGroups } from '../../../store/groups/groups.selectors';
+import { AppState } from '../../../store/store.model';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Notifications } from '../../../api/consts/notifications';
-import { CreateGroupResponse, IGroupViewModel } from '../../../api/model/groups';
 import { ProfileControllerService } from '../../../profile/services/profile-controller.service';
 import { ConfirmationComponent } from '../../../shared/confirmation/confirmation.component';
 
@@ -98,38 +97,8 @@ export class GroupsListService {
     this.isInitialLoading = false;
   }
 
-  createNewGroup() {
-    this.dialog
-      .open(NewGroupDialogComponent)
-      .afterClosed()
-      .pipe(
-        filter(Boolean),
-        tap(() => this.loading$$.next(true)),
-        switchMap((name: string) =>
-          this.groupHttpService.createGroup(name).pipe(
-            map((res: CreateGroupResponse) => ({
-              id: res.groupID,
-              profile: this.profileService.getProfile() ?? ({} as Profile),
-            })),
-            map(
-              ({ id, profile }): IGroupViewModel => ({
-                id,
-                name,
-                createdAt: Date.now().toString(),
-                createdBy: profile?.uid ?? '',
-              }),
-            ),
-            tap((group) => this.store.dispatch(groupCreated({ group }))),
-            tap(() => this.notificationService.success(Notifications.SUCCESS_CREATED_GROUP)),
-            finalize(() => this.loading$$.next(false)),
-            catchError(() => {
-              this.notificationService.error(Notifications.ERROR_CREATED_GROUP);
-              return EMPTY;
-            }),
-          ),
-        ),
-      )
-      .subscribe();
+  openCreateGroupDialog(): void {
+    this.dialog.open(NewGroupDialogComponent);
   }
 
   deleteGroup(id: string): void {
@@ -138,6 +107,7 @@ export class GroupsListService {
         data: {
           title: 'Delete group',
           content: 'Are you sure you want to delete this group?',
+          confirmButtonText: 'Delete',
         },
       })
       .afterClosed()
