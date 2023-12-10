@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Dialogs } from '../store.model';
-import { messagesLoaded } from './dialogs.actions';
+import { messagesAdded, messagesLoaded } from './dialogs.actions';
 import { IMessageViewModel } from '../../api/model/group-dialog';
 
 export const initialState: Dialogs = {};
@@ -19,14 +19,16 @@ export const dialogsReducer = createReducer(
       };
     },
   ),
-  // on(
-  //   groupCreated,
-  //   (state: IGroupViewModel[], { group }: { group: IGroupViewModel }): IGroupViewModel[] => [
-  //     group,
-  //     ...state,
-  //   ],
-  // ),
-  // on(groupDeleted, (state: IGroupViewModel[], { id }: { id: string }): IGroupViewModel[] => {
-  //   return state.filter((group) => group.id !== id);
-  // }),
+  on(
+    messagesAdded,
+    (
+      state: Dialogs,
+      { groupId, messages }: { groupId: string; messages: IMessageViewModel[] },
+    ): Dialogs => {
+      return {
+        ...state,
+        [groupId]: { groupId, messages: [...state[groupId].messages, ...messages] },
+      };
+    },
+  ),
 );

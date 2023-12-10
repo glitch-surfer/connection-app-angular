@@ -26,12 +26,8 @@ export class GroupHttpService {
     return this.http.delete<null>(`${ApiPaths.BASE_URL}${ApiPaths.GROUPS_DELETE}`, { params });
   }
 
-  getMessages(groupId: string, since?: string): Observable<DialogDTO> {
-    const params = new HttpParams().set('groupID', groupId);
-
-    if (since) {
-      params.set('since', since);
-    }
+  getMessages(groupId: string, since: string): Observable<DialogDTO> {
+    const params = new HttpParams().set('groupID', groupId).set('since', since);
 
     return this.http.get<DialogDTO>(`${ApiPaths.BASE_URL}${ApiPaths.GROUPS_DIALOG}`, {
       params,
