@@ -16,8 +16,11 @@
 
 <ng-template #content>
   <ul>
-    <li *ngFor="let message of messages$ | async as messages">
-      <p>({{ message.createdAt }})</p>
+    <li
+      *ngFor="let message of messages$ | async as messages"
+      [class.user-messages]="(userId$ | async) === message.authorID"
+    >
+      <p>({{ message.createdAt | date }})</p>
       {{ message.authorID }}: {{ message.message }}
     </li>
   </ul>
