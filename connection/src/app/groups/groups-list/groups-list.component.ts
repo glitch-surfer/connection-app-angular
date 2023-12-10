@@ -34,8 +34,7 @@ export class GroupsListComponent implements OnInit {
     this.groupsListService.createNewGroup();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   deleteGroup(groupId: string) {
-    console.log(groupId);
+    this.groupsListService.deleteGroup(groupId);
   }
 }

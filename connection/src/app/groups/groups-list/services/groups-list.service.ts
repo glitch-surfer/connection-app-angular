@@ -14,7 +14,7 @@ import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
 import { GroupHttpService } from '../../../api/group.service';
 import { groupsMapper } from '../helpers/group-mapper';
-import { groupCreated, groupsLoaded } from '../../../store/groups/groups.actions';
+import { groupCreated, groupDeleted, groupsLoaded } from '../../../store/groups/groups.actions';
 import { selectGroups } from '../../../store/groups/groups.selectors';
 import { AppState, Profile } from '../../../store/store.model';
 import { NewGroupDialogComponent } from '../new-group-dialog/new-group-dialog.component';
@@ -22,6 +22,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import { Notifications } from '../../../api/consts/notifications';
 import { CreateGroupResponse, IGroupViewModel } from '../../../api/model/groups';
 import { ProfileControllerService } from '../../../profile/services/profile-controller.service';
+import { ConfirmationComponent } from '../../../shared/confirmation/confirmation.component';
 
 const ONE_SECOND = 1000;
 const DEFAULT_TIMER = 6;
@@ -40,7 +41,6 @@ export class GroupsListService {
 
   private isInitialLoading = true;
 
-  // todo add loading
   private loading$$ = new BehaviorSubject<boolean>(false);
 
   loading$ = this.loading$$.asObservable();
@@ -128,6 +128,30 @@ export class GroupsListService {
             }),
           ),
         ),
+      )
+      .subscribe();
+  }
+
+  deleteGroup(id: string): void {
+    this.dialog
+      .open(ConfirmationComponent, {
+        data: {
+          title: 'Delete group',
+          content: 'Are you sure you want to delete this group?',
+        },
+      })
+      .afterClosed()
+      .pipe(
+        filter(Boolean),
+        tap(() => this.loading$$.next(true)),
+        switchMap(() => this.groupHttpService.deleteGroup(id)),
+        tap(() => this.store.dispatch(groupDeleted({ id }))),
+        tap(() => this.notificationService.success(Notifications.SUCCESS_DELETED_GROUP)),
+        catchError(() => {
+          this.notificationService.error(Notifications.ERROR_DELETED_GROUP);
+          return EMPTY;
+        }),
+        finalize(() => this.loading$$.next(false)),
       )
       .subscribe();
   }

@@ -7,4 +7,5 @@ export const Notifications = {
   SUCCESS_CREATED_GROUP: 'Group successfully created',
   SUCCESS_DELETED_GROUP: 'Group successfully deleted',
   ERROR_CREATED_GROUP: 'Failed to create group',
+  ERROR_DELETED_GROUP: 'Failed to delete group',
 };

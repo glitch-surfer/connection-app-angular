@@ -14,3 +14,10 @@ export const groupCreated = createAction(
     group,
   }),
 );
+
+export const groupDeleted = createAction(
+  '[Groups] Group Deleted',
+  ({ id }: { id: string }): { id: string } => ({
+    id,
+  }),
+);
