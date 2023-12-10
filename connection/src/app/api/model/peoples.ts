@@ -11,4 +11,20 @@ export interface PeopleDTO {
 export interface IPeopleViewModel {
   uid: string;
   name: string;
+  conversationId: string | null;
+}
+
+export interface Conversation {
+  id: { S: string };
+  companionID: { S: string };
+}
+
+export interface ConversationDTO {
+  Count: number;
+  Items: Conversation[];
+}
+
+export interface IConversationViewModel {
+  id: string;
+  companionID: string;
 }

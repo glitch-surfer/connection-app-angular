@@ -6,7 +6,10 @@
 
 <ng-template #content>
   <ul>
-    <li *ngFor="let people of peoples$ | async as peoples">
+    <li
+      [class.existing-conversation]="people.conversationId"
+      *ngFor="let people of peoples$ | async as peoples"
+    >
       <a [routerLink]="['groups', people.uid]">{{ people.name }}</a>
       <!-- <button *ngIf="group.createdBy === (userId$ | async)" (click)="deleteGroup(group.id)">
         Delete

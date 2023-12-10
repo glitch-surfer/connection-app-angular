@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, finalize, interval, map, tap } from 'rxjs';
+import { BehaviorSubject, finalize, forkJoin, interval, map, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/store.model';
 // import { MatDialog } from '@angular/material/dialog';
@@ -70,10 +70,12 @@ export class PeopleListService {
 
     this.loading$$.next(true);
 
-    this.peoplesHttpService
-      .getPeoplesList()
+    forkJoin([
+      this.peoplesHttpService.getPeoplesList(),
+      this.peoplesHttpService.getConversationsList(),
+    ])
       .pipe(
-        map((peoples) => peoplesMapper(peoples)),
+        map(([peoples, conversations]) => peoplesMapper(peoples, conversations)),
         map((peoples) => {
           const currentUserUid = AuthService.getCredentials().uid;
           return peoples.filter((people) => people.uid !== currentUserUid);

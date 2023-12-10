@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiPaths } from './api-paths';
-import { PeopleDTO } from './model/peoples';
+import { ConversationDTO, PeopleDTO } from './model/peoples';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,10 @@ export class PeopleHttpService {
 
   getPeoplesList(): Observable<PeopleDTO> {
     return this.http.get<PeopleDTO>(`${ApiPaths.BASE_URL}${ApiPaths.PEOPLE_LIST}`);
+  }
+
+  getConversationsList(): Observable<ConversationDTO> {
+    return this.http.get<ConversationDTO>(`${ApiPaths.BASE_URL}${ApiPaths.CONVERSATIONS_LIST}`);
   }
 
   // createConversation(name: string): Observable<CreateGroupResponse> {
