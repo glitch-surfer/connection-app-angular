@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, finalize, forkJoin, interval, map, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, catchError, finalize, forkJoin, interval, map, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 import { AppState } from '../../../store/store.model';
 // import { MatDialog } from '@angular/material/dialog';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -10,6 +11,8 @@ import { peoplesLoaded } from '../../../store/peoples/peoples.actions';
 import { peoplesMapper } from '../helpers/peoples-mapper';
 import { PeopleHttpService } from '../../../api/people.service';
 import { AuthService } from '../../../api/auth.service';
+import { IPeopleViewModel } from '../../../api/model/peoples';
+import { Notifications } from '../../../api/consts/notifications';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +39,7 @@ export class PeopleListService {
   constructor(
     private peoplesHttpService: PeopleHttpService,
     private store: Store,
+    private router: Router,
     // private dialog: MatDialog,
     private notificationService: NotificationService,
     // private profileService: ProfileControllerService,
@@ -86,6 +90,28 @@ export class PeopleListService {
       .subscribe();
 
     this.isInitialLoading = false;
+  }
+
+  goToConversation({ uid, conversationId }: IPeopleViewModel): void {
+    if (conversationId) {
+      this.router.navigate(['/conversation', conversationId]);
+      return;
+    }
+
+    this.loading$$.next(true);
+
+    this.peoplesHttpService
+      .createConversation(uid)
+      .pipe(
+        tap((newConversationId) => this.router.navigate(['/conversation', newConversationId])),
+        tap(() => this.notificationService.success(Notifications.SUCCESS_CREATE_CONVERSATION)),
+        catchError(() => {
+          this.notificationService.error(Notifications.ERROR_CREATE_CONVERSATION);
+          return EMPTY;
+        }),
+        finalize(() => this.loading$$.next(false)),
+      )
+      .subscribe();
   }
 
   // openCreateGroupDialog(): void {

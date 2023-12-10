@@ -24,7 +24,6 @@ export interface ConversationDTO {
   Items: Conversation[];
 }
 
-export interface IConversationViewModel {
-  id: string;
+export interface NewConversation {
   companionID: string;
 }

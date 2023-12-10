@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PeopleListService } from './services/people-list.service';
+import { IPeopleViewModel } from '../../api/model/peoples';
 
 @Component({
   selector: 'app-people-list',
@@ -28,6 +29,10 @@ export class PeopleListComponent implements OnInit {
   updatePeoples() {
     this.peopleListService.getPeoplesList();
     this.peopleListService.setTimer();
+  }
+
+  goToConversation(people: IPeopleViewModel) {
+    this.peopleListService.goToConversation(people);
   }
 
   // openDialog() {
