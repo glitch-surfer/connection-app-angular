@@ -8,10 +8,9 @@ describe('GroupDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GroupDialogComponent]
-    })
-    .compileComponents();
-    
+      imports: [GroupDialogComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(GroupDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

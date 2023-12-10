@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiPaths } from './api-paths';
 import { CreateGroupResponse, GroupDTO } from './model/groups';
+import { DialogDTO } from './model/group-dialog';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +24,17 @@ export class GroupHttpService {
   deleteGroup(id: string): Observable<null> {
     const params = new HttpParams().set('groupID', id);
     return this.http.delete<null>(`${ApiPaths.BASE_URL}${ApiPaths.GROUPS_DELETE}`, { params });
+  }
+
+  getMessages(groupId: string, since?: string): Observable<DialogDTO> {
+    const params = new HttpParams().set('groupID', groupId);
+
+    if (since) {
+      params.set('since', since);
+    }
+
+    return this.http.get<DialogDTO>(`${ApiPaths.BASE_URL}${ApiPaths.GROUPS_DIALOG}`, {
+      params,
+    });
   }
 }

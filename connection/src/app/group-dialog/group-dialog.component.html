@@ -1,1 +1,18 @@
-<p>group-dialog works!</p>
+<a routerLink="/">Back</a>
+
+<button (click)="onUpdateMessages()" [disabled]="timer$ | async">
+  Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
+</button>
+
+<!-- <button (click)="onDeleteGroup()" [disabled]="loading$ | async" *ngIf="group.createBy === userId">Delete</button> -->
+
+<p *ngIf="loading$ | async; else content">Loading...</p>
+
+<ng-template #content>
+  <ul>
+    <li *ngFor="let message of messages$ | async as messages">
+      <p>({{ message.createdAt }})</p>
+      {{ message.authorID }}: {{ message.message }}
+    </li>
+  </ul>
+</ng-template>
