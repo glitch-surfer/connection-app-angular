@@ -1,23 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { GroupsListService } from './services/groups-list.service';
 
 @Component({
   selector: 'app-groups-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './groups-list.component.html',
   styleUrl: './groups-list.component.scss',
 })
 export class GroupsListComponent implements OnInit {
   groups$ = this.groupsListService.groups$;
 
+  userId$ = this.groupsListService.userId$;
+
   timer$ = this.groupsListService.timer$;
+
+  loading$ = this.groupsListService.loading$;
 
   constructor(private groupsListService: GroupsListService) {}
 
   ngOnInit(): void {
-    this.groupsListService.getGroupsList('initial');
+    this.groupsListService.initGroupsList();
   }
 
   updateGroups() {
@@ -27,5 +32,10 @@ export class GroupsListComponent implements OnInit {
 
   openDialog() {
     this.groupsListService.createNewGroup();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  deleteGroup(groupId: string) {
+    console.log(groupId);
   }
 }

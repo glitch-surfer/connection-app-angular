@@ -35,6 +35,8 @@ const DEFAULT_TIMER = 6;
 export class GroupsListService {
   groups$ = (this.store as Store<AppState>).select(selectGroups);
 
+  userId$ = this.profileService.profile$.pipe(map((profile) => profile?.uid));
+
   private timer$$ = new BehaviorSubject<number>(0);
 
   timer$ = this.timer$$.asObservable();
@@ -75,6 +77,11 @@ export class GroupsListService {
     });
   }
 
+  initGroupsList(): void {
+    this.getGroupsList('initial');
+    this.profileService.getProfile();
+  }
+
   getGroupsList(loadingState?: 'initial'): void {
     if (loadingState === 'initial' && !this.isInitialLoading) {
       return;
@@ -113,7 +120,7 @@ export class GroupsListService {
                 id,
                 name,
                 createdAt: Date.now().toString(),
-                createdBy: profile.name,
+                createdBy: profile.uid,
               }),
             ),
             tap((group) => this.store.dispatch(groupCreated({ group }))),

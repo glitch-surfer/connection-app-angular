@@ -1,8 +1,16 @@
 <button (click)="updateGroups()" [disabled]="timer$ | async">Update</button>
 <span *ngIf="timer$ | async">timeout: {{ timer$ | async }}</span>
 <button (click)="openDialog()">New Group</button>
-<ul>
-  <li *ngFor="let group of groups$ | async as groups">
-    {{ group.name }}
-  </li>
-</ul>
+
+<p *ngIf="loading$ | async; else content">Loading...</p>
+
+<ng-template #content>
+  <ul>
+    <li *ngFor="let group of groups$ | async as groups">
+      <a [routerLink]="['groups', group.id]">{{ group.name }}</a>
+      <button *ngIf="group.createdBy === (userId$ | async)" (click)="deleteGroup(group.id)">
+        Delete
+      </button>
+    </li>
+  </ul>
+</ng-template>
