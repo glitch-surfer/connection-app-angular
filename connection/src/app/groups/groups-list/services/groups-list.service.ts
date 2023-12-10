@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   EMPTY,
+  Observable,
   catchError,
   filter,
   finalize,
+  forkJoin,
   interval,
   map,
   of,
@@ -17,7 +19,7 @@ import { GroupHttpService } from '../../../api/group.service';
 import { groupsMapper } from '../helpers/group-mapper';
 import { groupCreated, groupsLoaded } from '../../../store/groups/groups.actions';
 import { selectGroups } from '../../../store/groups/groups.selectors';
-import { AppState } from '../../../store/store.model';
+import { AppState, Profile } from '../../../store/store.model';
 import { NewGroupDialogComponent } from '../new-group-dialog/new-group-dialog.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Notifications } from '../../../api/consts/notifications';
@@ -93,47 +95,36 @@ export class GroupsListService {
   }
 
   createNewGroup() {
-    let groupName: string;
-    let groupID: string;
-
     this.dialog
       .open(NewGroupDialogComponent)
       .afterClosed()
       .pipe(
         filter(Boolean),
         tap(() => this.loading$$.next(true)),
-        tap((name) => {
-          groupName = name;
-        }),
-        switchMap((name: string) => this.groupHttpService.createGroup(name)),
-        tap((groupId) => {
-          groupID = groupId.groupID;
-        }),
-        switchMap(() =>
-          this.profileService.name === ''
-            ? this.profileService.getProfile()
-            : of(this.profileService.name),
-        ),
-        tap((profile) => {
-          const newGroup: IGroupViewModel = {
-            id: groupID,
-            name: groupName,
-            createdAt: Date.now().toString(),
-            createdBy: typeof profile === 'string' ? profile : profile.name,
-          };
-
-          this.store.dispatch(
-            groupCreated({
-              group: newGroup,
+        switchMap((name: string) =>
+          this.groupHttpService.createGroup(name).pipe(
+            map((res) => res.groupID),
+            switchMap(
+              (groupId: string): Observable<[string, Profile]> =>
+                forkJoin([of(groupId), this.profileService.profileRequest()]),
+            ),
+            map(
+              ([id, profile]: [string, Profile]): IGroupViewModel => ({
+                id,
+                name,
+                createdAt: Date.now().toString(),
+                createdBy: profile.name,
+              }),
+            ),
+            tap((group) => this.store.dispatch(groupCreated({ group }))),
+            tap(() => this.notificationService.success(Notifications.SUCCESS_CREATED_GROUP)),
+            finalize(() => this.loading$$.next(false)),
+            catchError(() => {
+              this.notificationService.error(Notifications.ERROR_CREATED_GROUP);
+              return EMPTY;
             }),
-          );
-        }),
-        tap(() => this.notificationService.success(Notifications.SUCCESS_CREATED_GROUP)),
-        catchError(() => {
-          this.notificationService.error(Notifications.ERROR_CREATED_GROUP);
-          return EMPTY;
-        }),
-        finalize(() => this.loading$$.next(false)),
+          ),
+        ),
       )
       .subscribe();
   }

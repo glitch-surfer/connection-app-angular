@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProfileControllerService } from './services/profile-controller.service';
@@ -13,7 +13,7 @@ type Errors = 'required' | 'maxlength' | 'pattern';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   name = new FormControl('', {
     validators: [
       Validators.required,
@@ -22,13 +22,17 @@ export class ProfileComponent {
     ],
   });
 
-  profile$ = this.profileService.getProfile();
+  profile$ = this.profileService.profile$;
 
   loading$ = this.profileService.loading$;
 
   isEditable = false;
 
   constructor(private profileService: ProfileControllerService) {}
+
+  ngOnInit(): void {
+    this.profileService.getProfile();
+  }
 
   onEdit(name: string | null) {
     if (!name) {

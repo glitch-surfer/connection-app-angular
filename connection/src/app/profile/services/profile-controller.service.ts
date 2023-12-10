@@ -6,11 +6,9 @@ import {
   Observable,
   Subscription,
   catchError,
-  filter,
   finalize,
   map,
   of,
-  switchMap,
   tap,
 } from 'rxjs';
 import { Router } from '@angular/router';
@@ -27,11 +25,15 @@ import { AuthService } from '../../api/auth.service';
   providedIn: 'root',
 })
 export class ProfileControllerService implements OnDestroy {
+  private profile: Profile | null = null;
+
   private subscription: Subscription[] = [];
 
-  private loading$$ = new BehaviorSubject<boolean>(true);
+  private loading$$ = new BehaviorSubject<boolean>(false);
 
   loading$ = this.loading$$.asObservable();
+
+  profile$ = (this.store as Store<AppState>).select(selectProfile);
 
   constructor(
     private http: ProfileHttpService,
@@ -41,40 +43,35 @@ export class ProfileControllerService implements OnDestroy {
     private router: Router,
   ) {}
 
-  getProfile(): Observable<Profile> {
-    return (this.store as Store<AppState>).select(selectProfile).pipe(
-      filter(Boolean),
-      switchMap((profile) => {
-        if (profile.uid === '') {
-          return this.http.getProfile().pipe(
-            map(profileMapper),
-            tap((profileData) => this.store.dispatch(profileLoaded({ profile: profileData }))),
-            catchError((err) => {
-              this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
-              return of(profile);
-            }),
-            finalize(() => this.loading$$.next(false)),
-          );
-        }
+  getProfile(): void {
+    if (this.profile) {
+      return;
+    }
 
-        return of(profile);
-      }),
-      finalize(() => this.loading$$.next(false)),
-    );
+    this.loading$$.next(true);
+
+    this.profileRequest()
+      .pipe(finalize(() => this.loading$$.next(false)))
+      .subscribe();
   }
 
   updateProfileName(name: string, profile: Profile): void {
     this.loading$$.next(true);
 
+    const newProfile = { ...profile, name };
+
     const subscription = this.http
       .updateProfileName(name)
       .pipe(
+        tap(() => this.store.dispatch(profileLoaded({ profile: newProfile }))),
+        tap(() => {
+          this.profile = newProfile;
+        }),
+        tap(() => this.notificationService.success(Notifications.SUCCESS_PROFILE_NAME)),
         catchError((err) => {
           this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
           return EMPTY;
         }),
-        tap(() => this.store.dispatch(profileLoaded({ profile: { ...profile, name } }))),
-        tap(() => this.notificationService.success(Notifications.SUCCESS_PROFILE_NAME)),
         finalize(() => this.loading$$.next(false)),
       )
       .subscribe();
@@ -94,6 +91,9 @@ export class ProfileControllerService implements OnDestroy {
         }),
         tap(() => this.notificationService.success(Notifications.SUCCESS_LOGOUT)),
         tap(() => this.store.dispatch(profileLoaded({ profile: { uid: '' } }))),
+        tap(() => {
+          this.profile = null;
+        }),
         tap(() => this.router.navigate(['/signin'])),
         tap(() => AuthService.removeCredentials()),
         finalize(() => this.loading$$.next(false)),
@@ -101,6 +101,24 @@ export class ProfileControllerService implements OnDestroy {
       .subscribe();
 
     this.subscription.push(subscription);
+  }
+
+  profileRequest(): Observable<Profile> {
+    if (this.profile) {
+      return of(this.profile);
+    }
+
+    return this.http.getProfile().pipe(
+      map(profileMapper),
+      tap((profileData) => this.store.dispatch(profileLoaded({ profile: profileData }))),
+      tap((profileData) => {
+        this.profile = profileData;
+      }),
+      catchError((err) => {
+        this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
+        return EMPTY;
+      }),
+    );
   }
 
   ngOnDestroy(): void {
