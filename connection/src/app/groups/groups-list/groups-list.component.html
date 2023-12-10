@@ -8,7 +8,7 @@
 <ng-template #content>
   <ul>
     <li *ngFor="let group of groups$ | async as groups">
-      <a [routerLink]="['groups', group.id]">{{ group.name }}</a>
+      <a [routerLink]="['group', group.id]">{{ group.name }}</a>
       <button *ngIf="group.createdBy === (userId$ | async)" (click)="deleteGroup(group.id)">
         Delete
       </button>

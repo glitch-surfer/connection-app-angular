@@ -23,11 +23,12 @@ export const routes: Routes = [
     loadComponent: () => import('./profile/profile.component').then((m) => m.ProfileComponent),
     canActivate: [authGuard],
   },
-  // {
-  //   path: 'groups',
-  //   loadComponent: () => import('./groups/groups.component').then((m) => m.GroupsComponent),
-  //   canActivate: [authGuard],
-  // },
+  {
+    path: 'group/:id',
+    loadComponent: () =>
+      import('./group-dialog/group-dialog.component').then((m) => m.GroupDialogComponent),
+    canActivate: [authGuard],
+  },
   {
     path: 'conversation/:id',
     loadComponent: () =>
