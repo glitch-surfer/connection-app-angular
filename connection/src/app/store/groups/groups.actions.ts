@@ -7,3 +7,10 @@ export const groupsLoaded = createAction(
     groups,
   }),
 );
+
+export const groupCreated = createAction(
+  '[Groups] Group Created',
+  ({ group }: { group: IGroupViewModel }): { group: IGroupViewModel } => ({
+    group,
+  }),
+);

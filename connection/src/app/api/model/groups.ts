@@ -24,3 +24,7 @@ export interface IGroupViewModel {
   createdAt: string;
   createdBy: string;
 }
+
+export interface CreateGroupResponse {
+  groupID: string;
+}

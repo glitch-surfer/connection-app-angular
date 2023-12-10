@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { GroupsListService } from './services/groups-list.service';
-import { NewGroupDialogComponent } from './new-group-dialog/new-group-dialog.component';
 
 @Component({
   selector: 'app-groups-list',
@@ -16,10 +14,7 @@ export class GroupsListComponent implements OnInit {
 
   timer$ = this.groupsListService.timer$;
 
-  constructor(
-    private groupsListService: GroupsListService,
-    private dialog: MatDialog,
-  ) {}
+  constructor(private groupsListService: GroupsListService) {}
 
   ngOnInit(): void {
     this.groupsListService.getGroupsList('initial');
@@ -30,13 +25,7 @@ export class GroupsListComponent implements OnInit {
     this.groupsListService.setTimer();
   }
 
-  openNewGroupDialog() {
-    const dialogRef = this.dialog.open(NewGroupDialogComponent);
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log(`Dialog result: ${result}`);
-      }
-    });
+  openDialog() {
+    this.groupsListService.createNewGroup();
   }
 }

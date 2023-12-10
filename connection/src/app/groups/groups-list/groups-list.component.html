@@ -1,6 +1,6 @@
 <button (click)="updateGroups()" [disabled]="timer$ | async">Update</button>
 <span *ngIf="timer$ | async">timeout: {{ timer$ | async }}</span>
-<button (click)="openNewGroupDialog()">New Group</button>
+<button (click)="openDialog()">New Group</button>
 <ul>
   <li *ngFor="let group of groups$ | async as groups">
     {{ group.name }}
