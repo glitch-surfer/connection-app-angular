@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, finalize, interval, map, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, catchError, finalize, interval, map, tap } from 'rxjs';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { GroupHttpService } from '../../api/group.service';
 import { MessagesMapper } from '../helpers/messages-mapper';
@@ -7,12 +8,25 @@ import { AppState } from '../../store/store.model';
 import { DEFAULT_TIMER, ONE_SECOND } from '../../groups/consts/timer';
 import { messagesAdded, messagesLoaded } from '../../store/dialogs/dialogs.actions';
 import { selectDialogs } from '../../store/dialogs/dialogs.selectors';
+import { selectProfile } from '../../store/profile/profile.selectors';
+import { selectGroups } from '../../store/groups/groups.selectors';
+import { Notifications } from '../../api/consts/notifications';
+import { NotificationService } from '../../core/services/notification.service';
+import { groupDeleted } from '../../store/groups/groups.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GroupDialogService {
   groupId: string = '';
+
+  groupAuthorId$ = (this.store as Store<AppState>)
+    .select(selectGroups)
+    .pipe(map((groups) => groups.find((group) => group.id === this.groupId)?.createdBy || ''));
+
+  userId$ = (this.store as Store<AppState>)
+    .select(selectProfile)
+    .pipe(map((profile) => profile.uid));
 
   private since = '';
 
@@ -40,6 +54,8 @@ export class GroupDialogService {
   constructor(
     private groupsHttpService: GroupHttpService,
     private store: Store,
+    private notificationService: NotificationService,
+    private router: Router,
   ) {}
 
   setTimer(): void {
@@ -79,6 +95,24 @@ export class GroupDialogService {
           if (messages.length > 0) {
             this.since = messages[messages.length - 1].createdAt;
           }
+        }),
+        finalize(() => this.loading$$.next(false)),
+      )
+      .subscribe();
+  }
+
+  deleteGroup(): void {
+    this.loading$$.next(true);
+
+    this.groupsHttpService
+      .deleteGroup(this.groupId)
+      .pipe(
+        tap(() => (this.store as Store<AppState>).dispatch(groupDeleted({ id: this.groupId }))),
+        tap(() => this.notificationService.success(Notifications.SUCCESS_DELETED_GROUP)),
+        tap(() => this.router.navigate(['/'])),
+        catchError(() => {
+          this.notificationService.error(Notifications.ERROR_DELETED_GROUP);
+          return EMPTY;
         }),
         finalize(() => this.loading$$.next(false)),
       )

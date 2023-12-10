@@ -1,10 +1,16 @@
 <a routerLink="/">Back</a>
 
-<button (click)="onUpdateMessages()" [disabled]="timer$ | async">
+<button (click)="onUpdateMessages()" [disabled]="(timer$ | async) || (loading$ | async)">
   Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
 </button>
 
-<!-- <button (click)="onDeleteGroup()" [disabled]="loading$ | async" *ngIf="group.createBy === userId">Delete</button> -->
+<button
+  (click)="onDeleteGroup()"
+  [disabled]="loading$ | async"
+  *ngIf="(userId$ | async) === (groupAuthorId$ | async)"
+>
+  Delete
+</button>
 
 <p *ngIf="loading$ | async; else content">Loading...</p>
 

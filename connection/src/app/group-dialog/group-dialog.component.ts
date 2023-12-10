@@ -17,18 +17,26 @@ export class GroupDialogComponent implements OnInit {
 
   messages$ = this.groupDialogService.messages$;
 
+  groupAuthorId$ = this.groupDialogService.groupAuthorId$;
+
+  userId$ = this.groupDialogService.userId$;
+
   constructor(
     private groupDialogService: GroupDialogService,
     private router: ActivatedRoute,
   ) {}
+
+  ngOnInit(): void {
+    this.groupDialogService.groupId = this.router.snapshot.params['id'];
+    this.groupDialogService.getMessages();
+  }
 
   onUpdateMessages(): void {
     this.groupDialogService.setTimer();
     this.groupDialogService.getMessages();
   }
 
-  ngOnInit(): void {
-    this.groupDialogService.groupId = this.router.snapshot.params['id'];
-    this.groupDialogService.getMessages();
+  onDeleteGroup(): void {
+    this.groupDialogService.deleteGroup();
   }
 }
