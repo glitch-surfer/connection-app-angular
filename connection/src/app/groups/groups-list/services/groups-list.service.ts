@@ -22,9 +22,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import { Notifications } from '../../../api/consts/notifications';
 import { ProfileControllerService } from '../../../profile/services/profile-controller.service';
 import { ConfirmationComponent } from '../../../shared/confirmation/confirmation.component';
-
-const ONE_SECOND = 1000;
-const DEFAULT_TIMER = 6;
+import { DEFAULT_TIMER, ONE_SECOND } from '../../consts/timer';
 
 @Injectable({
   providedIn: 'root',

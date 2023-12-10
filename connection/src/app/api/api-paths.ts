@@ -7,4 +7,7 @@ export const ApiPaths = {
   GROUPS_LIST: '/groups/list',
   GROUPS_CREATE: '/groups/create',
   GROUPS_DELETE: '/groups/delete',
+  PEOPLE_LIST: '/users',
+  CONVERSATIONS_LIST: '/conversations/list',
+  CONVERSATION_CREATE: '/conversations/create',
 };

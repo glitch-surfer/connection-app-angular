@@ -1,4 +1,5 @@
 import { IGroupViewModel } from '../api/model/groups';
+import { IPeopleViewModel } from '../api/model/peoples';
 
 export interface Profile {
   name: string;
@@ -10,4 +11,5 @@ export interface Profile {
 export interface AppState {
   profile: Profile;
   groups: IGroupViewModel[];
+  peoples: IPeopleViewModel[];
 }

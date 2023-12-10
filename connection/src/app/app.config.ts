@@ -8,6 +8,7 @@ import { AuthService } from './api/auth.service';
 import { AuthInterceptor } from './api/interceptors/auth.interceptor';
 import { profileReducer } from './store/profile/profile.reducer';
 import { groupsReducer } from './store/groups/groups.reducer';
+import { peoplesReducer } from './store/peoples/peoples.reducer';
 
 export const authInterceptorProvider: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
       StoreModule.forRoot({
         profile: profileReducer,
         groups: groupsReducer,
+        peoples: peoplesReducer,
       }),
     ]),
     provideAnimations(),
