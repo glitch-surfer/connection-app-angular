@@ -14,8 +14,6 @@ import { IPeopleViewModel } from '../../api/model/peoples';
 export class PeopleListComponent implements OnInit {
   peoples$ = this.peopleListService.peoples$;
 
-  // userId$ = this.peopleListService.userId$;
-
   timer$ = this.peopleListService.timer$;
 
   loading$ = this.peopleListService.loading$;
@@ -34,12 +32,4 @@ export class PeopleListComponent implements OnInit {
   goToConversation(people: IPeopleViewModel) {
     this.peopleListService.goToConversation(people);
   }
-
-  // openDialog() {
-  //   this.peopleListService.openCreatePeopleDialog();
-  // }
-
-  // deletePeople(peopleId: string) {
-  //   this.peopleListService.deletePeople(peopleId);
-  // }
 }
