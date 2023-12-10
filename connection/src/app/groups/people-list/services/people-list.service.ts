@@ -103,7 +103,9 @@ export class PeopleListService {
     this.peoplesHttpService
       .createConversation(uid)
       .pipe(
-        tap((newConversationId) => this.router.navigate(['/conversation', newConversationId])),
+        tap((newConversationId) =>
+          this.router.navigate(['/conversation', newConversationId.conversationID]),
+        ),
         tap(() => this.notificationService.success(Notifications.SUCCESS_CREATE_CONVERSATION)),
         catchError(() => {
           this.notificationService.error(Notifications.ERROR_CREATE_CONVERSATION);

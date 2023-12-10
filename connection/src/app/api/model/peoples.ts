@@ -25,5 +25,5 @@ export interface ConversationDTO {
 }
 
 export interface NewConversation {
-  companionID: string;
+  conversationID: string;
 }
