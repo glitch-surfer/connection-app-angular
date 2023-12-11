@@ -10,4 +10,5 @@ export const Notifications = {
   ERROR_DELETED_GROUP: 'Failed to delete group',
   ERROR_CREATE_CONVERSATION: 'Failed to create conversation',
   SUCCESS_CREATE_CONVERSATION: 'Conversation started',
+  ERROR_SEND_MESSAGE: 'Failed to send message',
 };

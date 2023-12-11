@@ -30,6 +30,7 @@ export class GroupDialogService {
     .select(selectProfile)
     .pipe(map((profile) => profile.uid));
 
+  // todo sort by time
   messages$ = (this.store as Store<AppState>).select(selectDialogs).pipe(
     map((dialogs) => {
       if (!dialogs[this.groupId]) {
@@ -106,6 +107,7 @@ export class GroupDialogService {
       .subscribe();
   }
 
+  // todo add confirmation
   deleteGroup(): void {
     this.loading$$.next(true);
 
@@ -117,6 +119,22 @@ export class GroupDialogService {
         tap(() => this.router.navigate(['/'])),
         catchError(() => {
           this.notificationService.error(Notifications.ERROR_DELETED_GROUP);
+          return EMPTY;
+        }),
+        finalize(() => this.loading$$.next(false)),
+      )
+      .subscribe();
+  }
+
+  sendMessage(message: string): void {
+    this.loading$$.next(true);
+
+    this.groupsHttpService
+      .sendMessage(this.groupId, message)
+      .pipe(
+        tap(() => this.getMessages()),
+        catchError(() => {
+          this.notificationService.error(Notifications.ERROR_SEND_MESSAGE);
           return EMPTY;
         }),
         finalize(() => this.loading$$.next(false)),

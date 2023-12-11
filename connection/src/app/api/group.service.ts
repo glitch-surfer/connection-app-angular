@@ -33,4 +33,11 @@ export class GroupHttpService {
       params,
     });
   }
+
+  sendMessage(groupID: string, message: string): Observable<null> {
+    return this.http.post<null>(`${ApiPaths.BASE_URL}${ApiPaths.GROUPS_SEND_MESSAGE}`, {
+      groupID,
+      message,
+    });
+  }
 }

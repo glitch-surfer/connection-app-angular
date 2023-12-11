@@ -25,3 +25,9 @@
     </li>
   </ul>
 </ng-template>
+
+<input type="text" [formControl]="newMessage" placeholder="Message" />
+
+<button (click)="onSendMessage()" [disabled]="(loading$ | async) || newMessage.invalid">
+  Send
+</button>
