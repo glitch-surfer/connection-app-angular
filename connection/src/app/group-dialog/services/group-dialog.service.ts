@@ -13,6 +13,7 @@ import { selectGroups } from '../../store/groups/groups.selectors';
 import { Notifications } from '../../api/consts/notifications';
 import { NotificationService } from '../../core/services/notification.service';
 import { groupDeleted } from '../../store/groups/groups.actions';
+import { IMessageViewModel } from '../../api/model/group-dialog';
 
 @Injectable({
   providedIn: 'root',
@@ -83,7 +84,8 @@ export class GroupDialogService {
       .getMessages(this.groupId, this.since[this.groupId] ?? '')
       .pipe(
         map((messages) => MessagesMapper(messages)),
-        tap((messages) => {
+        map((messages) => messages.sort((a, b) => +a.createdAt - +b.createdAt).slice()),
+        tap((messages: IMessageViewModel[]) => {
           const isInitialLoading = Boolean(!this.since[this.groupId]);
 
           if (messages.length > 0) {
@@ -101,6 +103,10 @@ export class GroupDialogService {
                   messages,
                 }),
           );
+        }),
+        catchError(() => {
+          this.notificationService.error(Notifications.ERROR_LOAD_MESSAGES);
+          return EMPTY;
         }),
         finalize(() => this.loading$$.next(false)),
       )
