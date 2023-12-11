@@ -94,12 +94,10 @@ export class GroupDialogService {
               ? messagesLoaded({
                   groupId: this.groupId,
                   messages,
-                  since: this.since[this.groupId] ?? '',
                 })
               : messagesAdded({
                   groupId: this.groupId,
                   messages,
-                  since: this.since[this.groupId] ?? '',
                 }),
           );
         }),

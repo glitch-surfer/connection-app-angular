@@ -12,15 +12,11 @@ export const dialogsReducer = createReducer(
     messagesLoaded,
     (
       state: Dialogs,
-      {
-        groupId,
-        messages,
-        since,
-      }: { groupId: string; messages: IMessageViewModel[]; since: string },
+      { groupId, messages }: { groupId: string; messages: IMessageViewModel[] },
     ): Dialogs => {
       return {
         ...state,
-        [groupId]: { groupId, messages, since },
+        [groupId]: { groupId, messages },
       };
     },
   ),
@@ -28,15 +24,11 @@ export const dialogsReducer = createReducer(
     messagesAdded,
     (
       state: Dialogs,
-      {
-        groupId,
-        messages,
-        since,
-      }: { groupId: string; messages: IMessageViewModel[]; since: string },
+      { groupId, messages }: { groupId: string; messages: IMessageViewModel[] },
     ): Dialogs => {
       return {
         ...state,
-        [groupId]: { groupId, messages: [...state[groupId].messages, ...messages], since },
+        [groupId]: { groupId, messages: [...state[groupId].messages, ...messages] },
       };
     },
   ),

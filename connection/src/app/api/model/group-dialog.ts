@@ -24,5 +24,4 @@ export interface IMessageViewModel {
 export interface Dialog {
   groupId: string;
   messages: IMessageViewModel[];
-  since: string;
 }
