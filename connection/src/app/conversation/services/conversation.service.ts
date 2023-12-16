@@ -68,17 +68,11 @@ export class ConversationService {
     }),
   );
 
-  private timer$$ = new BehaviorSubject<number>(0);
-
-  timer$ = this.timer$$.asObservable();
+  timers: { [key: string]: BehaviorSubject<number> } = {};
 
   private loading$$ = new BehaviorSubject<boolean>(false);
 
   loading$ = this.loading$$.asObservable();
-
-  get timer(): number {
-    return this.timer$$.getValue();
-  }
 
   constructor(
     private conversationHttpService: PeopleHttpService,
@@ -86,30 +80,32 @@ export class ConversationService {
     private notificationService: NotificationService,
     private router: Router,
     private peopleListService: PeopleListService,
-    // private groupsListService: GroupsListService,
     private dialog: MatDialog,
   ) {}
 
   initConversation(): void {
-    // this.groupsListService.initGroupsList();
     this.peopleListService.initPeoplesList();
     this.getMessages();
   }
 
   setTimer(): void {
-    if (this.timer !== 0) {
+    const timer = this.timers[this.conversationId];
+
+    if (timer.getValue()) {
       return;
     }
 
-    this.timer$$.next(DEFAULT_TIMER);
+    let count = DEFAULT_TIMER;
 
     const interval$ = interval(ONE_SECOND).subscribe(() => {
-      if (this.timer === 0) {
+      if (count === 0) {
         interval$.unsubscribe();
         return;
       }
 
-      this.timer$$.next(this.timer - 1);
+      count -= 1;
+
+      timer.next(count);
     });
   }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { ConversationService } from './services/conversation.service';
 
 @Component({
@@ -14,7 +15,7 @@ import { ConversationService } from './services/conversation.service';
 export class ConversationComponent implements OnInit {
   newMessage = new FormControl('', { validators: [Validators.required] });
 
-  timer$ = this.conversationService.timer$;
+  timer$!: BehaviorSubject<number>;
 
   loading$ = this.conversationService.loading$;
 
@@ -31,6 +32,14 @@ export class ConversationComponent implements OnInit {
 
   ngOnInit(): void {
     this.conversationService.conversationId = this.router.snapshot.params['id'];
+
+    const timer = this.conversationService.timers[this.conversationService.conversationId];
+    if (!timer) {
+      this.conversationService.timers[this.conversationService.conversationId] =
+        new BehaviorSubject<number>(0);
+    }
+    this.timer$ = this.conversationService.timers[this.conversationService.conversationId];
+
     this.conversationService.initConversation();
   }
 
