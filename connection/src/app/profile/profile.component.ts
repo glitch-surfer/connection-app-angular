@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { ProfileControllerService } from './services/profile-controller.service';
 import { Profile } from '../store/store.model';
 
@@ -9,7 +10,7 @@ type Errors = 'required' | 'maxlength' | 'pattern';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
