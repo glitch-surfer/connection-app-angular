@@ -4,8 +4,11 @@ $error-color: #ff0000;
 $success-color: #00ff00;
 
 $primary-color: #3f51b5;
+$secondary-color: #e89126;
 $primary-color-light: #e3f2fd;
 $primary-color-dark: #283593;
+$btn-disabled-color-light: #b8b1b1;
+$btn-disabled-color-dark: #757575;
 
 * {
   box-sizing: border-box;
@@ -41,9 +44,10 @@ a:visited {
   }
 
   .dark-theme & {
-    color: $primary-color-light;
+    color: $secondary-color;
   }
 }
+
 
 .error-snackbar {
   width: fit-content;
@@ -57,4 +61,10 @@ a:visited {
   color: $primary-color;
   background-color: $primary-color-light;
   border-bottom: 3px solid $success-color;
+}
+
+button {
+  &:disabled {
+    color: $btn-disabled-color-dark;
+  }
 }

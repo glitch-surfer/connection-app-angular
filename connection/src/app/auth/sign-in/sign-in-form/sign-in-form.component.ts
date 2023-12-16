@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { passwordValidator } from './validators/password-validator';
 import { SignInService } from '../sign-in.service';
 import { incorrectCredentialsValidator } from './validators/incorrect-credentials';
@@ -13,7 +14,7 @@ type Errors = 'required' | 'email' | 'weakPassword' | 'incorrectCreds';
 @Component({
   selector: 'app-sign-in-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatButtonModule],
   templateUrl: './sign-in-form.component.html',
   styleUrl: './sign-in-form.component.scss',
 })

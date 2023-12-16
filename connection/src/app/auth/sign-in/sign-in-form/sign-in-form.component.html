@@ -1,5 +1,5 @@
 <form class="signup-form" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <h2 class="title">Sign in</h2>
+  <h2>Sign in</h2>
   <div class="container">
     <label for="email" class="label"></label>
     <input
@@ -32,8 +32,11 @@
   <div class="btn-container">
     <a [routerLink]="'/signup'">SignUp</a>
     <button
-    type="submit"
-    [disabled]="!form.valid || (loading$ | async)"
-    >SignIn</button>
+      mat-flat-button
+      color="secondary"
+      type="submit"
+      [disabled]="!form.valid || (loading$ | async)"
+      >SignIn
+    </button>
   </div>
 </form>
