@@ -19,6 +19,12 @@
   gap: 0.5rem;
 }
 
+.error-title {
+  margin-top: 3rem;
+  font-size: 2rem;
+  text-align: center;
+}
+
 :host-context(.dark-theme) {
   a,
   a:visited {
