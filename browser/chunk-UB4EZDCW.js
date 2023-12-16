@@ -1,0 +1,1 @@
+import{a as o}from"./chunk-GSZV43AH.js";var r=o("[Peoples] Peoples Loaded",({peoples:e})=>({peoples:e})),s=o("[Peoples] People Conversation Created",({conversationID:e,uid:p})=>({conversationID:e,uid:p}));export{r as a,s as b};

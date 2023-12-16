@@ -1,0 +1,1 @@
+import{a as o}from"./chunk-GSZV43AH.js";var t=o("[Conversation] Messages Loaded",({conversationId:e,messages:s})=>({conversationId:e,messages:s})),a=o("[Conversation] Messages Added",({conversationId:e,messages:s})=>({conversationId:e,messages:s})),r=o("[Conversation] Conversation Deleted",({id:e})=>({id:e}));export{t as a,a as b,r as c};

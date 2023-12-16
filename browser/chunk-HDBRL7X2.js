@@ -1,0 +1,1 @@
+import{a as o}from"./chunk-GSZV43AH.js";var a=o("[Dialog] Messages Loaded",({groupId:e,messages:s})=>({groupId:e,messages:s})),t=o("[Dialog] Messages Added",({groupId:e,messages:s})=>({groupId:e,messages:s}));export{a,t as b};

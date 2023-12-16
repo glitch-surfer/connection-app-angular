@@ -1,0 +1,1 @@
+import{a as e}from"./chunk-GSZV43AH.js";var p=e("[Groups] Groups Loaded",({groups:o})=>({groups:o})),t=e("[Groups] Group Created",({group:o})=>({group:o})),u=e("[Groups] Group Deleted",({id:o})=>({id:o}));export{p as a,t as b,u as c};
