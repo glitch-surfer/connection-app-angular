@@ -25,3 +25,7 @@ export interface Dialog {
   groupId: string;
   messages: IMessageViewModel[];
 }
+
+export interface Dialogs {
+  [key: string]: Dialog;
+}

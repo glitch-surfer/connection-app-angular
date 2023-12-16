@@ -1,7 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import { Dialogs } from '../store.model';
 import { messagesAdded, messagesLoaded } from './dialogs.actions';
-import { IMessageViewModel } from '../../api/model/group-dialog';
+import { Dialogs, IMessageViewModel } from '../../api/model/group-dialog';
 import { groupDeleted } from '../groups/groups.actions';
 
 export const initialState: Dialogs = {};
