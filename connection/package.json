@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint --fix",
-    "deploy": "ng deploy --base-href=/glitch-surfer-ANGULAR2023Q4/"
+    "deploy": "ng deploy --base-href=/glitch-surfer-connection-app-angular/"
   },
   "private": true,
   "dependencies": {
