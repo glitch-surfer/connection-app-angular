@@ -18,7 +18,7 @@ export class HeaderComponent {
 
   constructor() {
     this.darkTheme = localStorage.getItem('theme') === 'dark';
-    document.body.classList.toggle('dark-theme', this.darkTheme);
+    document.body.classList.toggle('dark-theme', !this.darkTheme);
   }
 
   get isAuth() {
