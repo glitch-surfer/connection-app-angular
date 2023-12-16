@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { GroupsListService } from './services/groups-list.service';
 
 @Component({
   selector: 'app-groups-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatButtonModule],
   templateUrl: './groups-list.component.html',
   styleUrl: './groups-list.component.scss',
 })

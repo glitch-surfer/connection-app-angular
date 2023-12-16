@@ -1,4 +1,4 @@
-$border-radius: 5px;
+$border-radius: 4px;
 
 $error-color: #ff0000;
 $success-color: #00ff00;
@@ -66,5 +66,24 @@ a:visited {
 button {
   &:disabled {
     color: $btn-disabled-color-dark;
+  }
+}
+
+.btn {
+  height: 36px;
+  padding: 0 1rem;
+  align-self: flex-start;
+  color: #fafafa;
+  background-color: #424242;
+  border-radius: $border-radius;
+  border: none;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    background-color: $btn-disabled-color-light;
+    opacity: 1;
   }
 }

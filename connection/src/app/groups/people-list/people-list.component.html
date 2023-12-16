@@ -1,16 +1,24 @@
-<button (click)="updatePeoples()" [disabled]="timer$ | async">
-  Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
-</button>
+<section class="container">
+  <h2>Peoples</h2>
 
-<p *ngIf="loading$ | async; else content">Loading...</p>
+  <button class="btn" (click)="updatePeoples()" [disabled]="timer$ | async">
+    Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
+  </button>
 
-<ng-template #content>
-  <ul>
-    <li
-      [class.existing-conversation]="people.conversationId"
-      *ngFor="let people of peoples$ | async as peoples"
-    >
-      <button (click)="goToConversation(people)">{{ people.name }}</button>
-    </li>
-  </ul>
-</ng-template>
+  <p *ngIf="loading$ | async; else content">Loading...</p>
+
+  <ng-template #content>
+    <ul class="peoples">
+      <li *ngFor="let people of peoples$ | async as peoples">
+        <button
+          [class.existing-conversation]="people.conversationId"
+          mat-flat-button
+          (click)="goToConversation(people)"
+          class="peoples__item"
+        >
+          {{ people.name }}
+        </button>
+      </li>
+    </ul>
+  </ng-template>
+</section>

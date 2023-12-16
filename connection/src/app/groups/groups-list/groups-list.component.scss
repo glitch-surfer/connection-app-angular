@@ -1,0 +1,51 @@
+@import 'styles.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btns-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.groups {
+  max-height: 70vh;
+  padding: 0.5rem 1rem;
+  border: 1px solid $primary-color-dark;
+  border-radius: $border-radius;
+  overflow: auto;
+}
+
+.groups__item {
+  position: relative;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid $primary-color;
+
+  a {
+    display: block;
+
+    &:hover {
+      background-color: lighten($secondary-color, 20%);
+    }
+  }
+}
+
+.groups__delete-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+:host-context(.dark-theme) {
+  a,
+  a:visited {
+    color: $secondary-color;
+  }
+
+  .groups {
+    border: 1px solid $secondary-color;
+  }
+}

@@ -1,4 +1,8 @@
 :host {
+  max-width: 800px;
+  padding: 1rem;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(250px, 30%) auto;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }

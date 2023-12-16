@@ -1,5 +1,45 @@
 @import 'styles.scss';
 
-.existing-conversation {
-  background-color: $primary-color;
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.peoples {
+  max-height: 70vh;
+  padding: 0.5rem 1rem;
+  border: 1px solid $primary-color-dark;
+  border-radius: $border-radius;
+  overflow: auto;
+}
+
+.peoples__item {
+  width: 100%;
+  margin-bottom: 0.25rem;
+
+  &:not(.existing-conversation) {
+    background-color: darken($primary-color-light, 15%);
+  }
+
+  &.existing-conversation {
+    background-color: $primary-color;
+  }
+}
+
+
+:host-context(.dark-theme) {
+  .peoples {
+    border: 1px solid $secondary-color;
+  }
+
+  .peoples__item {
+    &:not(.existing-conversation) {
+      background-color: lighten($primary-color-dark, 15%);
+    }
+
+    &.existing-conversation {
+      background-color: darken($secondary-color, 10%);
+    }
+  }
 }

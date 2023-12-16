@@ -1,17 +1,29 @@
-<button (click)="updateGroups()" [disabled]="timer$ | async">
-  Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
-</button>
-<button (click)="openDialog()">New Group</button>
+<section class="container">
+  <h2>Groups</h2>
 
-<p *ngIf="loading$ | async; else content">Loading...</p>
+  <div class="btns-wrapper">
+    <button class="btn" (click)="updateGroups()" [disabled]="timer$ | async">
+      Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="openDialog()">New Group</button>
+  </div>
 
-<ng-template #content>
-  <ul>
-    <li *ngFor="let group of groups$ | async as groups">
-      <a [routerLink]="['group', group.id]">{{ group.name }}</a>
-      <button *ngIf="group.createdBy === (userId$ | async)" (click)="deleteGroup(group.id)">
-        Delete
-      </button>
-    </li>
-  </ul>
-</ng-template>
+  <p *ngIf="loading$ | async; else content">Loading...</p>
+
+  <ng-template #content>
+    <ul class="groups">
+      <li class="groups__item" *ngFor="let group of groups$ | async as groups">
+        <a [routerLink]="['group', group.id]">{{ group.name }}</a>
+        <button
+          mat-flat-button
+          color="secondary"
+          *ngIf="group.createdBy === (userId$ | async)"
+          (click)="deleteGroup(group.id)"
+          class="groups__delete-btn"
+        >
+          Delete
+        </button>
+      </li>
+    </ul>
+  </ng-template>
+</section>
