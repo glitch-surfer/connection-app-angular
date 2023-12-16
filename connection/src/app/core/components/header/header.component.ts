@@ -13,7 +13,15 @@ import { AuthService } from '../../../api/auth.service';
 export class HeaderComponent {
   private authService = AuthService;
 
+  darkTheme = true;
+
   get isAuth() {
     return this.authService.isAuth();
+  }
+
+  toggleTheme() {
+    this.darkTheme = !this.darkTheme;
+
+    document.body.classList.toggle('dark-theme');
   }
 }

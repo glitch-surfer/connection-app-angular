@@ -11,9 +11,14 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+
+  &.dark-theme {
+    background-color: $primary-color-dark;
+  }
 }
 
 .error-snackbar {
