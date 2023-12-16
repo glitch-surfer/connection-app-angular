@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { GroupDialogService } from './services/group-dialog.service';
 
 @Component({
@@ -14,7 +15,7 @@ import { GroupDialogService } from './services/group-dialog.service';
 export class GroupDialogComponent implements OnInit {
   newMessage = new FormControl('', { validators: [Validators.required] });
 
-  timer$ = this.groupDialogService.timer$;
+  timer$!: BehaviorSubject<number>;
 
   loading$ = this.groupDialogService.loading$;
 
@@ -31,6 +32,15 @@ export class GroupDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.groupDialogService.groupId = this.router.snapshot.params['id'];
+
+    const timer = this.groupDialogService.timers[this.groupDialogService.groupId];
+    if (!timer) {
+      this.groupDialogService.timers[this.groupDialogService.groupId] = new BehaviorSubject<number>(
+        0,
+      );
+    }
+    this.timer$ = this.groupDialogService.timers[this.groupDialogService.groupId];
+
     this.groupDialogService.initDialog();
   }
 

@@ -48,6 +48,10 @@ export class GroupDialogService {
 
   private readonly peoples$ = (this.store as Store<AppState>).select(selectPeoples);
 
+  private readonly loading$$ = new BehaviorSubject<boolean>(false);
+
+  loading$ = this.loading$$.asObservable();
+
   groupId: string = '';
 
   groupAuthorId$ = (this.store as Store<AppState>)
@@ -67,17 +71,7 @@ export class GroupDialogService {
     }),
   );
 
-  private timer$$ = new BehaviorSubject<number>(0);
-
-  timer$ = this.timer$$.asObservable();
-
-  private loading$$ = new BehaviorSubject<boolean>(false);
-
-  loading$ = this.loading$$.asObservable();
-
-  get timer(): number {
-    return this.timer$$.getValue();
-  }
+  timers: { [key: string]: BehaviorSubject<number> } = {};
 
   constructor(
     private groupsHttpService: GroupHttpService,
@@ -96,19 +90,23 @@ export class GroupDialogService {
   }
 
   setTimer(): void {
-    if (this.timer !== 0) {
+    const timer = this.timers[this.groupId];
+
+    if (timer.getValue()) {
       return;
     }
 
-    this.timer$$.next(DEFAULT_TIMER);
+    let count = DEFAULT_TIMER;
 
     const interval$ = interval(ONE_SECOND).subscribe(() => {
-      if (this.timer === 0) {
+      if (count === 0) {
         interval$.unsubscribe();
         return;
       }
 
-      this.timer$$.next(this.timer - 1);
+      count -= 1;
+
+      timer.next(count);
     });
   }
 

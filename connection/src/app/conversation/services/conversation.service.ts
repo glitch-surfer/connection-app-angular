@@ -49,6 +49,10 @@ export class ConversationService {
 
   private readonly peoples$ = (this.store as Store<AppState>).select(selectPeoples);
 
+  private readonly loading$$ = new BehaviorSubject<boolean>(false);
+
+  loading$ = this.loading$$.asObservable();
+
   conversationId: string = '';
 
   isConversationExist$ = this.peoples$.pipe(
@@ -69,10 +73,6 @@ export class ConversationService {
   );
 
   timers: { [key: string]: BehaviorSubject<number> } = {};
-
-  private loading$$ = new BehaviorSubject<boolean>(false);
-
-  loading$ = this.loading$$.asObservable();
 
   constructor(
     private conversationHttpService: PeopleHttpService,
