@@ -10,6 +10,7 @@ import { profileReducer } from './store/profile/profile.reducer';
 import { groupsReducer } from './store/groups/groups.reducer';
 import { peoplesReducer } from './store/peoples/peoples.reducer';
 import { dialogsReducer } from './store/dialogs/dialogs.reducer';
+import { conversationsReducer } from './store/conversation/conversation.reducer';
 
 export const authInterceptorProvider: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -29,6 +30,7 @@ export const appConfig: ApplicationConfig = {
         groups: groupsReducer,
         peoples: peoplesReducer,
         dialogs: dialogsReducer,
+        conversations: conversationsReducer,
       }),
     ]),
     provideAnimations(),
