@@ -59,17 +59,17 @@ export class ProfileControllerService implements OnDestroy {
     return null;
   }
 
-  updateProfileName(name: string, profile: Profile): void {
+  updateProfileName(name: string): void {
     this.loading$$.next(true);
 
-    const newProfile = { ...profile, name };
+    const newProfile = { ...this.profile, name };
 
     const subscription = this.http
       .updateProfileName(name)
       .pipe(
         tap(() => this.store.dispatch(profileLoaded({ profile: newProfile }))),
         tap(() => {
-          this.profile = newProfile;
+          this.profile = newProfile as Profile;
         }),
         tap(() => this.notificationService.success(Notifications.SUCCESS_PROFILE_NAME)),
         catchError((err) => {

@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProfileControllerService } from './services/profile-controller.service';
-import { Profile } from '../store/store.model';
 
 type Errors = 'required' | 'maxlength' | 'pattern';
 
@@ -45,24 +44,14 @@ export class ProfileComponent implements OnInit {
     this.name.setValue(name);
   }
 
-  onSave(profileData: string | null) {
-    if (this.name.invalid || !this.name.value || !profileData) {
+  onSave() {
+    if (this.name.invalid || !this.name.value) {
       return;
     }
 
     this.isEditable = false;
 
-    let profile: Profile;
-    try {
-      profile = JSON.parse(profileData);
-    } catch (error) {
-      return;
-    }
-    if (!profile) {
-      return;
-    }
-
-    this.profileService.updateProfileName(this.name.value, profile);
+    this.profileService.updateProfileName(this.name.value);
   }
 
   hasError(error: Errors): boolean {
