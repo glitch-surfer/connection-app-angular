@@ -62,7 +62,7 @@ export class GroupDialogService {
     map(([messages, peoples]) => {
       return messages.map((message) => ({
         ...message,
-        author: peoples.find((people) => people.uid === message.authorID)?.name ?? 'You',
+        author: peoples.find((people) => people.uid === message.authorID)?.name ?? 'Me',
       }));
     }),
   );
