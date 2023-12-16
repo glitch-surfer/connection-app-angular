@@ -12,4 +12,7 @@ export const ApiPaths = {
   PEOPLE_LIST: '/users',
   CONVERSATIONS_LIST: '/conversations/list',
   CONVERSATION_CREATE: '/conversations/create',
+  CONVERSATION_SEND_MESSAGE: '/conversations/append',
+  CONVERSATION_MESSAGES: '/conversations/read',
+  CONVERSATION_DELETE: '/conversations/delete',
 };
