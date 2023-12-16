@@ -3,6 +3,7 @@ import {
   BehaviorSubject,
   EMPTY,
   catchError,
+  combineLatest,
   filter,
   finalize,
   interval,
@@ -25,9 +26,10 @@ import { Notifications } from '../../api/consts/notifications';
 import { NotificationService } from '../../core/services/notification.service';
 import { groupDeleted } from '../../store/groups/groups.actions';
 import { IMessageViewModel } from '../../api/model/group-dialog';
-// import { PeopleListService } from '../../groups/people-list/services/people-list.service';
+import { PeopleListService } from '../../groups/people-list/services/people-list.service';
 import { GroupsListService } from '../../groups/groups-list/services/groups-list.service';
 import { ConfirmationComponent } from '../../shared/confirmation/confirmation.component';
+import { selectPeoples } from '../../store/peoples/peoples.selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -35,22 +37,33 @@ import { ConfirmationComponent } from '../../shared/confirmation/confirmation.co
 export class GroupDialogService {
   private readonly since: { [key: string]: string } = {};
 
-  groupId: string = '';
-
-  groupAuthorId$ = (this.store as Store<AppState>)
-    .select(selectGroups)
-    .pipe(map((groups) => groups.find((group) => group.id === this.groupId)?.createdBy || ''));
-
-  userId$ = (this.store as Store<AppState>)
-    .select(selectProfile)
-    .pipe(map((profile) => profile.uid));
-
-  messages$ = (this.store as Store<AppState>).select(selectDialogs).pipe(
+  private readonly messagesRaw$ = (this.store as Store<AppState>).select(selectDialogs).pipe(
     map((dialogs) => {
       if (!dialogs[this.groupId]) {
         return [];
       }
       return dialogs[this.groupId].messages;
+    }),
+  );
+
+  private readonly peoples$ = (this.store as Store<AppState>).select(selectPeoples);
+
+  groupId: string = '';
+
+  groupAuthorId$ = (this.store as Store<AppState>)
+    .select(selectGroups)
+    .pipe(map((groups) => groups.find((group) => group.id === this.groupId)?.createdBy));
+
+  userId$ = (this.store as Store<AppState>)
+    .select(selectProfile)
+    .pipe(map((profile) => profile.uid));
+
+  messages$ = combineLatest([this.messagesRaw$, this.peoples$]).pipe(
+    map(([messages, peoples]) => {
+      return messages.map((message) => ({
+        ...message,
+        author: peoples.find((people) => people.uid === message.authorID)?.name ?? 'You',
+      }));
     }),
   );
 
@@ -71,22 +84,14 @@ export class GroupDialogService {
     private store: Store,
     private notificationService: NotificationService,
     private router: Router,
-    // private peopleListService: PeopleListService,
+    private peopleListService: PeopleListService,
     private groupsListService: GroupsListService,
     private dialog: MatDialog,
   ) {}
 
-  // todo problem is when i load page intially, not after navigation,
-  // i need to get groups & check if this groupId exist in the list, or throw error with notification or render errorpage,
-  // mayby refactor initGroups to return observable req if it doesnt exist but what to do with existing,
-  // that need to be subscribed (maybe subscribe somewhere)
-
   initDialog(): void {
-    // if (!this.groupId) {
-    //   this.notificationService.error(Notifications.ERROR_GROUP_NOT_FOUND);
-    // }
-
     this.groupsListService.initGroupsList();
+    this.peopleListService.initPeoplesList();
     this.getMessages();
   }
 

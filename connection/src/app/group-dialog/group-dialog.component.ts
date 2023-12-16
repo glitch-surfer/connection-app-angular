@@ -31,7 +31,7 @@ export class GroupDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.groupDialogService.groupId = this.router.snapshot.params['id'];
-    this.groupDialogService.getMessages();
+    this.groupDialogService.initDialog();
   }
 
   onUpdateMessages(): void {
