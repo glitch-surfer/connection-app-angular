@@ -1,11 +1,15 @@
-<h1>Connection App <small>by Glutch-surfer</small></h1>
+<h1 class="title">
+  Connection App <small><i>by Glutch-surfer</i></small>
+</h1>
 
-<div>
+<div class="nav-wrapper">
   <nav class="nav" [ngSwitch]="isAuth">
     <a routerLink="/" *ngSwitchCase="true">Groups</a>
     <a routerLink="/profile" *ngSwitchCase="true">Profile</a>
     <a routerLink="/signup" *ngSwitchCase="false">Sign Up</a>
     <a routerLink="/signin" *ngSwitchCase="false">Sign In</a>
   </nav>
-  <button (click)="toggleTheme()">switch theme</button>
+  <button class="theme-btn" [class.switched]="!darkTheme" mat-icon-button (click)="toggleTheme()">
+    <img src="assets/theme-icon.svg" alt="switch theme icon" />
+  </button>
 </div>

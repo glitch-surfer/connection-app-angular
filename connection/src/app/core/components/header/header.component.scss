@@ -1,10 +1,46 @@
 :host {
+  padding: 1rem;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  margin: 0;
+  color: #8e12b4;
+}
+
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .nav {
   display: flex;
   gap: 1rem;
+}
+
+.theme-btn {
+  transition:
+    transform 0.3s ease-in-out,
+    filter 0.3s ease-in-out;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &.switched {
+    transform: rotate(180deg);
+  }
+}
+
+:host-context(.dark-theme) {
+  .title {
+    color: #e8b6f8;
+  }
+
+  .theme-btn {
+    filter: invert(1);
+  }
 }

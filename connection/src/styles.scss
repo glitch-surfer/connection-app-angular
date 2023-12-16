@@ -7,17 +7,41 @@ $primary-color: #3f51b5;
 $primary-color-light: #e3f2fd;
 $primary-color-dark: #283593;
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html,
 body {
   height: 100%;
 }
 
 body {
-  margin: 0;
+  background-color: $primary-color-light;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 
   &.dark-theme {
     background-color: $primary-color-dark;
+    color: $primary-color-light;
+  }
+}
+
+a,
+a:visited {
+  color: $primary-color;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+
+  .dark-theme & {
+    color: $primary-color-light;
   }
 }
 
