@@ -11,5 +11,7 @@ export const Notifications = {
   ERROR_CREATE_CONVERSATION: 'Failed to create conversation',
   ERROR_LOAD_MESSAGES: 'Failed to load messages',
   SUCCESS_CREATE_CONVERSATION: 'Conversation started',
+  SUCCESS_DELETE_CONVERSATION: 'Conversation deleted',
+  ERROR_DELETE_CONVERSATION: 'Failed to delete conversation',
   ERROR_SEND_MESSAGE: 'Failed to send message',
 };

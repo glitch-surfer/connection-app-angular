@@ -1,1 +1,37 @@
-<p>conversation works!</p>
+<a routerLink="/">Back</a>
+
+<p *ngIf="loading$ | async; else content">Loading...</p>
+
+<ng-template #content>
+  <ng-container *ngIf="!!(isConversationExist$ | async); else notExist">
+    <button (click)="onUpdateMessages()" [disabled]="(timer$ | async) || (loading$ | async)">
+      Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
+    </button>
+
+    <button
+      (click)="onDeleteConversation()"
+      [disabled]="loading$ | async"
+    >
+      Delete
+    </button>
+    <ul>
+      <li
+        *ngFor="let message of messages$ | async as messages"
+        [class.user-messages]="(userId$ | async) === message.authorID"
+      >
+        <p>({{ message.createdAt | date }})</p>
+        {{ message.author }}: {{ message.message }}
+      </li>
+    </ul>
+
+    <input type="text" [formControl]="newMessage" placeholder="Message" />
+
+    <button (click)="onSendMessage()" [disabled]="(loading$ | async) || newMessage.invalid">
+      Send
+    </button>
+  </ng-container>
+
+  <ng-template #notExist>
+    <p>Conversation doesn't exist</p>
+  </ng-template>
+</ng-template>
