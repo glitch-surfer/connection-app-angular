@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
 import { GroupHttpService } from '../../api/group.service';
-import { MessagesMapper } from '../helpers/messages-mapper';
+import { MessagesMapper } from '../../helpers/messages-mapper';
 import { AppState } from '../../store/store.model';
 import { DEFAULT_TIMER, ONE_SECOND } from '../../groups/consts/timer';
 import { messagesAdded, messagesLoaded } from '../../store/dialogs/dialogs.actions';

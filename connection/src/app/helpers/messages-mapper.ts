@@ -1,4 +1,4 @@
-import { DialogDTO, IMessageViewModel } from '../../api/model/group-dialog';
+import { DialogDTO, IMessageViewModel } from '../api/model/group-dialog';
 
 export const MessagesMapper = (messages: DialogDTO): IMessageViewModel[] => {
   return messages.Items.map((message) => ({
