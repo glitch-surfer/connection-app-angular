@@ -1,7 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, catchError, finalize, interval, map, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  EMPTY,
+  catchError,
+  filter,
+  finalize,
+  interval,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { MatDialog } from '@angular/material/dialog';
 import { GroupHttpService } from '../../api/group.service';
 import { MessagesMapper } from '../helpers/messages-mapper';
 import { AppState } from '../../store/store.model';
@@ -14,6 +25,9 @@ import { Notifications } from '../../api/consts/notifications';
 import { NotificationService } from '../../core/services/notification.service';
 import { groupDeleted } from '../../store/groups/groups.actions';
 import { IMessageViewModel } from '../../api/model/group-dialog';
+// import { PeopleListService } from '../../groups/people-list/services/people-list.service';
+import { GroupsListService } from '../../groups/groups-list/services/groups-list.service';
+import { ConfirmationComponent } from '../../shared/confirmation/confirmation.component';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +45,6 @@ export class GroupDialogService {
     .select(selectProfile)
     .pipe(map((profile) => profile.uid));
 
-  // todo sort by time
   messages$ = (this.store as Store<AppState>).select(selectDialogs).pipe(
     map((dialogs) => {
       if (!dialogs[this.groupId]) {
@@ -58,7 +71,24 @@ export class GroupDialogService {
     private store: Store,
     private notificationService: NotificationService,
     private router: Router,
+    // private peopleListService: PeopleListService,
+    private groupsListService: GroupsListService,
+    private dialog: MatDialog,
   ) {}
+
+  // todo problem is when i load page intially, not after navigation,
+  // i need to get groups & check if this groupId exist in the list, or throw error with notification or render errorpage,
+  // mayby refactor initGroups to return observable req if it doesnt exist but what to do with existing,
+  // that need to be subscribed (maybe subscribe somewhere)
+
+  initDialog(): void {
+    // if (!this.groupId) {
+    //   this.notificationService.error(Notifications.ERROR_GROUP_NOT_FOUND);
+    // }
+
+    this.groupsListService.initGroupsList();
+    this.getMessages();
+  }
 
   setTimer(): void {
     if (this.timer !== 0) {
@@ -113,14 +143,21 @@ export class GroupDialogService {
       .subscribe();
   }
 
-  // todo add confirmation
   deleteGroup(): void {
-    this.loading$$.next(true);
-
-    this.groupsHttpService
-      .deleteGroup(this.groupId)
+    this.dialog
+      .open(ConfirmationComponent, {
+        data: {
+          title: 'Delete group',
+          content: 'Are you sure you want to delete this group?',
+          confirmButtonText: 'Delete',
+        },
+      })
+      .afterClosed()
       .pipe(
-        tap(() => (this.store as Store<AppState>).dispatch(groupDeleted({ id: this.groupId }))),
+        filter(Boolean),
+        tap(() => this.loading$$.next(true)),
+        switchMap(() => this.groupsHttpService.deleteGroup(this.groupId)),
+        tap(() => this.store.dispatch(groupDeleted({ id: this.groupId }))),
         tap(() => this.notificationService.success(Notifications.SUCCESS_DELETED_GROUP)),
         tap(() => this.router.navigate(['/'])),
         catchError(() => {
