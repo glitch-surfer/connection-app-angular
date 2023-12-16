@@ -4,31 +4,32 @@
 
 <ng-template #content>
   <ng-container *ngIf="!!(isConversationExist$ | async); else notExist">
-    <button (click)="onUpdateMessages()" [disabled]="(timer$ | async) || (loading$ | async)">
-      Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
-    </button>
+    <div class="btn-wrapper">
+      <button class="btn" (click)="onUpdateMessages()" [disabled]="(timer$ | async) || (loading$ | async)">
+        Update<span *ngIf="timer$ | async"> (timeout: {{ timer$ | async }})</span>
+      </button>
 
-    <button
-      (click)="onDeleteConversation()"
-      [disabled]="loading$ | async"
-    >
-      Delete
-    </button>
-    <ul>
+      <button class="btn" (click)="onDeleteConversation()" [disabled]="loading$ | async">Delete</button>
+    </div>
+    <ul class="messages">
       <li
+        class="messages__item"
         *ngFor="let message of messages$ | async as messages"
         [class.user-messages]="(userId$ | async) === message.authorID"
       >
-        <p>({{ message.createdAt | date }})</p>
+        <span>({{ message.createdAt | date }})</span>
         {{ message.author }}: {{ message.message }}
       </li>
+      <li *ngIf="!(messages$ | async)?.length">No messages yet</li>
     </ul>
 
-    <input type="text" [formControl]="newMessage" placeholder="Message" />
+    <div class="input-wrapper">
+      <input class="input" type="text" [formControl]="newMessage" placeholder="Message" />
 
-    <button (click)="onSendMessage()" [disabled]="(loading$ | async) || newMessage.invalid">
-      Send
-    </button>
+      <button class="btn" (click)="onSendMessage()" [disabled]="(loading$ | async) || newMessage.invalid">
+        Send
+      </button>
+    </div>
   </ng-container>
 
   <ng-template #notExist>
