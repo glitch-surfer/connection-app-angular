@@ -1,14 +1,8 @@
 <form class="signup-form" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <h2 class="title">Sign up</h2>
+  <h2>Sign up</h2>
   <div class="container">
     <label for="name" class="label"></label>
-    <input
-      type="text"
-      formControlName="name"
-      id="name"
-      placeholder="Vasya"
-      class="input"
-    />
+    <input type="text" formControlName="name" id="name" placeholder="Vasya" class="input" />
     <p class="error" *ngIf="hasError('name', 'required')">Please enter name</p>
     <p class="error" *ngIf="hasError('name', 'maxlength')">
       Maximum length is {{ name?.errors?.['maxlength']?.requiredLength }}, you entered
@@ -47,6 +41,13 @@
   </div>
   <div class="btn-container">
     <a [routerLink]="'/signin'">SignIn</a>
-    <button type="submit" [disabled]="!form.valid || (loading$ | async)">SignUp</button>
+    <button
+      mat-flat-button
+      color="secondary"
+      type="submit"
+      [disabled]="!form.valid || (loading$ | async)"
+    >
+      SignUp
+    </button>
   </div>
 </form>

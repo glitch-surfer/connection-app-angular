@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { passwordValidator } from './validators/password-validator';
 import { SignUpService } from '../sign-up.service';
 import { duplicatedEmailValidator } from './validators/duplicated-email';
@@ -13,7 +14,7 @@ type ControlNames = 'name' | 'email' | 'password';
 @Component({
   selector: 'app-sign-up-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatButtonModule],
   templateUrl: './sign-up-form.component.html',
   styleUrl: './sign-up-form.component.scss',
 })
