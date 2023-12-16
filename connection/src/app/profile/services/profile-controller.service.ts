@@ -6,7 +6,7 @@ import { ProfileHttpService } from '../../api/profile.service';
 import { selectProfile } from '../../store/profile/profile.selectors';
 import { AppState, Profile } from '../../store/store.model';
 import { profileLoaded } from '../../store/profile/profile.actions';
-import { profileMapper } from '../hekpers/profile-mapper';
+import { profileMapper } from '../helpers/profile-mapper';
 import { NotificationService } from '../../core/services/notification.service';
 import { Notifications } from '../../api/consts/notifications';
 import { AuthService } from '../../api/auth.service';
