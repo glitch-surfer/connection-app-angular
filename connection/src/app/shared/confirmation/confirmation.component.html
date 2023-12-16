@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   <p>{{ data.content }}</p>
 </div>
-<div mat-dialog-actions>
+<div class="btn-wrapper" mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>
   <button mat-button [mat-dialog-close]="true" cdkFocusInitial>{{ data.confirmButtonText }}</button>
 </div>
