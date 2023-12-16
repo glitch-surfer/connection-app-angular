@@ -35,4 +35,8 @@ export const routes: Routes = [
       import('./conversation/conversation.component').then((m) => m.ConversationComponent),
     canActivate: [authGuard],
   },
+  {
+    path: '**',
+    loadComponent: () => import('./not-found/not-found.component').then((m) => m.NotFoundComponent),
+  },
 ];
