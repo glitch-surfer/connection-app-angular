@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PeopleListService } from './services/people-list.service';
 import { IPeopleViewModel } from '../../api/model/peoples';
 
 @Component({
   selector: 'app-people-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule],
+  imports: [CommonModule, RouterModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './people-list.component.html',
   styleUrl: './people-list.component.scss',
 })

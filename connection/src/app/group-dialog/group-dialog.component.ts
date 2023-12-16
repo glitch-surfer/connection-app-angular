@@ -3,12 +3,13 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GroupDialogService } from './services/group-dialog.service';
 
 @Component({
   selector: 'app-group-dialog',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, MatProgressSpinnerModule],
   templateUrl: './group-dialog.component.html',
   styleUrl: './group-dialog.component.scss',
 })

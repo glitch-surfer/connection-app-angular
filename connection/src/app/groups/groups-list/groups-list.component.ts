@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GroupsListService } from './services/groups-list.service';
 
 @Component({
   selector: 'app-groups-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule],
+  imports: [CommonModule, RouterModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './groups-list.component.html',
   styleUrl: './groups-list.component.scss',
 })

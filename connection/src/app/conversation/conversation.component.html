@@ -1,6 +1,6 @@
 <a routerLink="/">Back</a>
 
-<p *ngIf="loading$ | async; else content">Loading...</p>
+<mat-spinner class="spinner" *ngIf="loading$ | async; else content"></mat-spinner>
 
 <ng-template #content>
   <ng-container *ngIf="!!(isConversationExist$ | async); else notExist">
