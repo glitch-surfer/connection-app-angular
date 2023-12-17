@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkconnection=self.webpackChunkconnection||[]).push([[592],{418:(a,t,c)=>{c.d(t,{r:()=>n});const n=s=>s.Items.map(e=>({authorID:e.authorID.S,message:e.message.S,createdAt:e.createdAt.S}))}}]);
