@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, EMPTY, Subscription, catchError, finalize, map, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Subscription, catchError, finalize, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProfileHttpService } from '../../api/profile.service';
 import { selectProfile } from '../../store/profile/profile.selectors';
@@ -51,6 +51,11 @@ export class ProfileControllerService implements OnDestroy {
         finalize(() => this.loading$$.next(false)),
         catchError((err) => {
           this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
+
+          if (err.error.type === 'InvalidIDException') {
+            this.logout();
+          }
+
           return EMPTY;
         }),
       )
@@ -91,7 +96,7 @@ export class ProfileControllerService implements OnDestroy {
       .pipe(
         catchError((err) => {
           this.notificationService.error(err.error.message || Notifications.UNKNOWN_ERROR);
-          return EMPTY;
+          return of(null);
         }),
         tap(() => this.notificationService.success(Notifications.SUCCESS_LOGOUT)),
         tap(() => this.store.dispatch(profileLoaded({ profile: { uid: '' } }))),
