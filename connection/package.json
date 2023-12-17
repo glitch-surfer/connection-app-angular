@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint --fix",
-    "deploy": "ng deploy --base-href=/connection-app-angular/browser/"
+    "deploy": "ng deploy --base-href=/connection-app-angular/"
   },
   "private": true,
   "dependencies": {
