@@ -112,6 +112,7 @@ button {
 }
 
 .messages__item {
+  margin-right: 2rem;
   padding: 0.5rem;
   width: fit-content;
   display: flex;
@@ -123,6 +124,8 @@ button {
 }
 
 .user-messages {
+  margin-right: 0;
+  margin-left: 2rem;
   align-self: flex-end;
 }
 
